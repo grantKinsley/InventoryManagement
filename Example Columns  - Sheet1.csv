@@ -1,0 +1,2 @@
+ASIN (unique int 10 digit),Model (internal to company),Tier Cost,Cost (to company),Listing Price (price to sell to Amazon),Promotional Price (if applicable),MSRP ,Current Rebate (IR),EOL?,Sellable Inventory,Waiting to Ship
+10 char string,string,float,float,float,float,float,float,bool,int,int
