@@ -5,8 +5,8 @@ client = MongoClient(
 
 db = client["inventory-cluster"]
 
-post = {"Hello_World": "Hello MongoDB"}
+amz_item = {"Hello_World": "Hello MongoDB"}
 
-posts = db.posts
-post_id = posts.insert_one(post).inserted_id
+amz_items = db.amz_items
+post_id = amz_items.insert_one(amz_item).inserted_id
 print(post_id)
