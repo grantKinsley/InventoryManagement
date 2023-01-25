@@ -12,7 +12,11 @@ schema = {"$jsonSchema":
           {
               "bsonType": "object",
               "required": ["asin", "model"],
+              "additionalProperties": False,
               "properties": {
+                  "_id": {  # Auto populated by mongo
+                      "bsonType": "objectId"
+                  },
                   "asin": {
                       "bsonType": "string",
                       "minLength": 10,
@@ -47,9 +51,9 @@ schema = {"$jsonSchema":
 
 cmd = OrderedDict([('collMod', 'amz_items'),
                    ('validator', schema)])
-# cmd result is {'collMod': 'amz_items', 'validator': schema}
+# cmd = {'collMod': 'amz_items', 'validator': schema}
 # in exactly that order (order matters)
-# collMod = collection modify
+# collMod stands for collection modify
 db.command(cmd)
 print("Validator Updated")
 

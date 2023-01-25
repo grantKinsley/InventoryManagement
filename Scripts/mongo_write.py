@@ -5,7 +5,7 @@ client = MongoClient(
 
 db = client["inventory-cluster"]
 
-amz_item = {"asin": "9876543210", "model": "Fluffy Bear"}
+amz_item = {"asin": "abcdefghij", "model": "Big Bear"}
 
 amz_items = db.amz_items
 post_id = amz_items.insert_one(amz_item).inserted_id
