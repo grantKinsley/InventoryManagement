@@ -1,7 +1,6 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from . import controllers
-
 import json
 # Create your views here.
 
@@ -12,10 +11,11 @@ def amz_items(request):
         if request.method == 'GET':
             return controllers.get_items()
         if request.method == 'POST':
+            # json bytes -> decode utf8 -> json.loads -> dict
             body_as_dict = json.loads(request.body.decode('utf-8'))
             return controllers.create_item(body_as_dict)
     except Exception as err:
-        return JsonResponse({"Error 404": f"Something went wrong. {err}"})
+        return JsonResponse({"Error 404": f"{err}"})
 
 
 # Security token with csrf (supposed to stop people from hijacking your browser)
@@ -29,6 +29,7 @@ def amz_item(request, asin):
         if request.method == 'DELETE':
             return controllers.delete_item(asin)
         if request.method == 'PATCH':
-            return  # todo
+            update_params = json.loads(request.body.decode('utf-8'))
+            return controllers.patch_item(asin, update_params)
     except Exception as err:
-        return JsonResponse({"Error 404": f"Something went wrong. {err}"})
+        return JsonResponse({"Error 404": f"{err}"})
