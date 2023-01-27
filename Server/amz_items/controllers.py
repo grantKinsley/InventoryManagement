@@ -23,7 +23,6 @@ def get_item(asin):
     return JsonResponse(item, safe=False)
 
 
-# todo once we figure out how data is structured in DB
 def create_item(item):
     amz_items.insert_one(item).inserted_id
     return JsonResponse({"Success": f"Document with asin {item['asin']} created"})
