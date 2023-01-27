@@ -25,8 +25,9 @@ def get_item(asin):
 
 
 # todo once we figure out how data is structured in DB
-def post_item():
-    return
+def create_item(item):
+    post_id = amz_items.insert_one(item).inserted_id
+    return JsonResponse({"Success": f"Document with asin {item['asin']} created"})
 
 
 def delete_item(asin):
