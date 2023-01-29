@@ -11,7 +11,7 @@ amz_items = db.amz_items
 schema = {"$jsonSchema":
           {
               "bsonType": "object",
-              "required": ["asin", "model"],
+              "required": ["asin", "model", "sellingPrice", "cost", "amzInv"],
               "additionalProperties": False,
               "properties": {
                   "_id": {  # Auto populated by mongo
@@ -27,6 +27,26 @@ schema = {"$jsonSchema":
                       "bsonType": "string",
                       "description": "must be a string and is required"
                   },
+                  "sellingPrice": {
+                      "bsonType": "double",
+                      "minimum": 0.0,
+                      "description": "must be a float and is required"
+                  },
+                  "cost": {
+                      "bsonType": "double",
+                      "minimum": 0.0,
+                      "description": "must be a float and is required"
+                  },
+                  "amzInv": {
+                      "bsonType": "int",
+                      "minimum": 0,
+                      "description": "must be an int and is required"
+                  },
+                  "salesRate": {
+                      "bsonType": "int",
+                      "description": "must be an int"
+                  }
+
                   #  "year": {
                   #      "bsonType": "int",
                   #      "minimum": 2017,
