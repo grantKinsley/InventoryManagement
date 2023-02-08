@@ -41,7 +41,7 @@ def amz_item(request, asin):
 
 
 @csrf_exempt
-def write_report(request, asin):
+def write_report(request):
     try:
         if request.method == 'GET':
             # response = HttpResponse(
@@ -63,4 +63,3 @@ def write_report(request, asin):
             # return response
     except Exception as err:
         return JsonResponse({"Error 404": f"{err}"})
-
