@@ -1,7 +1,10 @@
 from django.http import JsonResponse
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from . import controllers
 import json
+import csv
+import pandas as pd
 # Create your views here.
 
 
@@ -33,3 +36,29 @@ def amz_item(request, asin):
             return controllers.patch_item(asin, update_params)
     except Exception as err:
         return JsonResponse({"Error 404": f"{err}"})
+
+
+@csrf_exempt
+def write_report(request, asin):
+    try:
+        if request.method == 'GET':
+            # response = HttpResponse(
+            #     content_type='text/csv',
+            #     headers={'Content-Disposition:' 'attachment; filename="report.csv"'}
+            # )
+
+            # jsonString = controllers.get_item(asin)
+            # df = pd.DataFrame(jsonString)
+            # df.pop("_id")
+            # csv = df.to_csv('CSV_output.csv', index = False)
+
+            # writer = csv.writer(response)
+            # for row in csv:
+            #     writer.writerow(row)
+
+            # return HttpResponse("reporting on asin %s" % asin)
+            return HttpResponse("got to write_report")
+            # return response
+    except Exception as err:
+        return JsonResponse({"Error 404": f"{err}"})
+
