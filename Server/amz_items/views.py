@@ -5,6 +5,7 @@ import json
 # Create your views here.
 
 
+# Route: /amz_items/
 @csrf_exempt
 def amz_items(request):
     try:
@@ -21,6 +22,7 @@ def amz_items(request):
 # Security token with csrf (supposed to stop people from hijacking your browser)
 # Disabled for now but maybe try re-enabling later
 # CSRF error occurs on postman delete
+# Route: /amz_items/:asin
 @csrf_exempt
 def amz_item(request, asin):
     try:
