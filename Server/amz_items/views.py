@@ -4,8 +4,6 @@ from django.views.decorators.csrf import csrf_exempt
 from . import controllers
 from . import middleware
 import json
-import csv
-import pandas as pd
 
 # Create your views here.
 

@@ -9,11 +9,10 @@ def authentication_required(view_func):
     @functools.wraps(view_func)
     def authenticate(request, *args, **kwargs):
         token = request.META.get("HTTP_BEARER")
-        print(token)
         try:
             decoded_token = jwt.decode(
                 token, SECRET_KEY, algorithms=["HS256"])
-            request.META[decoded_token] = decoded_token
+            request.META["decoded_token"] = decoded_token
             return view_func(request, *args, **kwargs)
         except Exception as err:
             print(err)
