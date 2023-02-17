@@ -2,20 +2,22 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from . import controllers
+from . import middleware
 import json
 import csv
 import pandas as pd
+
 # Create your views here.
 
 
 # Route: /amz_items/
 @csrf_exempt
+@middleware.authentication_required
 def amz_items(request):
     try:
         if request.method == 'GET':
             return controllers.get_items()
         if request.method == 'POST':
-            # json bytes -> decode utf8 -> json.loads -> dict
             body_as_dict = json.loads(request.body.decode('utf-8'))
             return controllers.create_item(body_as_dict)
     except Exception as err:
@@ -27,6 +29,7 @@ def amz_items(request):
 # CSRF error occurs on postman delete
 # Route: /amz_items/:asin
 @csrf_exempt
+@middleware.authentication_required
 def amz_item(request, asin):
     try:
         if request.method == 'GET':
