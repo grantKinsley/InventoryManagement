@@ -31,7 +31,7 @@ def login(request):
         return JsonResponse({"Error": "Invalid Username and/or Password"})
 
     expiration_date = datetime.datetime.now(
-        tz=datetime.timezone.utc) + datetime.timedelta(seconds=2)
+        tz=datetime.timezone.utc) + datetime.timedelta(hours=1)
     token = jwt.encode(
         {"username": username, "exp": expiration_date}, SECRET_KEY, algorithm="HS256")
 
