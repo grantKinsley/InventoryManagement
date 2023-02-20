@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from pymongo import MongoClient
 from bson.json_util import dumps
+from bson import ObjectId
 import json
 import bcrypt
 import jwt
@@ -14,6 +15,7 @@ client = MongoClient(
 db = client["inventory-cluster"]
 
 auth = db.auth
+companies = db.companies
 
 
 def login(request):
@@ -24,6 +26,7 @@ def login(request):
     if user_document == None:
         return JsonResponse({"Error": "Invalid Username and/or Password"})
 
+    companyId = str(user_document.get("companyId"))
     password = body.get("password").encode()
     hashed_password = user_document.get("password").encode()
 
@@ -33,13 +36,15 @@ def login(request):
     expiration_date = datetime.datetime.now(
         tz=datetime.timezone.utc) + datetime.timedelta(hours=1)
     token = jwt.encode(
-        {"username": username, "exp": expiration_date}, SECRET_KEY, algorithm="HS256")
+        {"username": username, "companyId": companyId, "exp": expiration_date}, SECRET_KEY, algorithm="HS256")
 
     return JsonResponse({"token": token})
 
 
 def register(request):
     body = json.loads(request.body.decode('utf-8'))
+    body["companyId"] = ObjectId(body.get("companyId"))
+    assert (companies.find_one({"_id": body["companyId"]}))
     password = body.get("password").encode()
     assert (password != None)
     password = bcrypt.hashpw(password, bcrypt.gensalt()).decode()

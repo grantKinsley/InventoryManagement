@@ -13,11 +13,12 @@ import json
 @middleware.authentication_required
 def amz_items(request):
     try:
+        token = request.META.get("decoded_token")
         if request.method == 'GET':
-            return controllers.get_items()
+            return controllers.get_items(token)
         if request.method == 'POST':
             body_as_dict = json.loads(request.body.decode('utf-8'))
-            return controllers.create_item(body_as_dict)
+            return controllers.create_item(body_as_dict, token)
     except Exception as err:
         return JsonResponse({"Error 404": f"{err}"})
 
@@ -30,13 +31,14 @@ def amz_items(request):
 @middleware.authentication_required
 def amz_item(request, asin):
     try:
+        token = request.META.get("decoded_token")
         if request.method == 'GET':
-            return controllers.get_item(asin)
+            return controllers.get_item(asin, token)
         if request.method == 'DELETE':
-            return controllers.delete_item(asin)
+            return controllers.delete_item(asin, token)
         if request.method == 'PATCH':
             update_params = json.loads(request.body.decode('utf-8'))
-            return controllers.patch_item(asin, update_params)
+            return controllers.patch_item(asin, update_params, token)
     except Exception as err:
         return JsonResponse({"Error 404": f"{err}"})
 

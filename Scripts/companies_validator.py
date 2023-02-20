@@ -6,38 +6,28 @@ client = MongoClient(
 
 db = client["inventory-cluster"]
 
-auth = db.auth
+companies = db.companies
 
 schema = {"$jsonSchema":
           {
               "bsonType": "object",
-              "required": ["username", "password", "companyId"],
+              "required": ["name"],
               "additionalProperties": False,
               "properties": {
                   "_id": {  # Auto populated by mongo
                       "bsonType": "objectId"
                   },
-                  "username": {
+                  "name": {
                       "bsonType": "string",
-                      "minLength": 4,
-                      "maxLength": 20,
+                      "minLength": 1,
+                      "maxLength": 50,
                       "description": "must be a string of length 4-20 and is required"
                   },
-                  "password": {
-                      "bsonType": "string",
-                      "minLength": 4,
-                      "maxLength": 100,
-                      "description": "must be a string and is required"
-                  },
-                  "companyId": {
-                      "bsonType": "objectId",
-                      "description": "Mapping to company and is required"
-                  }
               }
           }
           }
 
-cmd = OrderedDict([('collMod', 'auth'),
+cmd = OrderedDict([('collMod', 'companies'),
                    ('validator', schema)])
 # cmd = {'collMod': 'amz_items', 'validator': schema}
 # in exactly that order (order matters)
@@ -46,5 +36,5 @@ db.command(cmd)
 print("Validator Updated")
 
 # Enforces that "asin" field is unique value
-auth.create_index("username", unique=True)
-print("Index Updated")
+# companies.create_index("username", unique=True)
+# print("Index Updated")
