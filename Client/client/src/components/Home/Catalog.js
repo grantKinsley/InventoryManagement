@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
+import AuthContext from "../../context-Api/AuthProvider"
+
 
 const baseURL = "http://localhost:8000/amz_items/";
 
@@ -11,18 +13,25 @@ const Card = (props) => {
     )
 }
 
-const Home = () => {
+const Catalog = () => {
     const [asin, setAsin] = useState("");
     const [model, setModel] = useState("");
     const [fetched, setFetched] = useState(false);
     const [data, setData] = useState([])
+    const { auth } = useContext(AuthContext);
 
-    const handleGetAll = () => {
-        axios.get(baseURL).then((response) => {
-            setFetched(true);
-            const result = JSON.parse(response.data);
-            setData(result);
-        })
+    const handleGetAll = async e => {
+        console.log(auth.token);
+        const response = await axios.get(
+            baseURL,
+            {
+                headers: { "Content-Type": "application/json", "Bearer": auth.token },
+            }
+        );
+        setFetched(true);
+        const result = JSON.parse(response.data);
+        setData(result);
+
     };
 
     if (fetched) {
@@ -79,4 +88,4 @@ const Home = () => {
     );
 }
 
-export default Home;
+export default Catalog;

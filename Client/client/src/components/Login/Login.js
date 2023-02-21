@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate  } from "react-router-dom";
+import AuthContext from "../../context-Api/AuthProvider"
 import axios from "axios";
+
+// Test Login:
+// Username: abc123
+// Password: abc123
 
 const baseURL = "http://localhost:8000/auth/login";
 
@@ -10,6 +15,7 @@ const Login = () => {
     const [success, setSuccess] = useState(false);
     const [errMsg, setErrMsg] = useState("");
 
+    const { setAuth } = useContext(AuthContext);
     const navigate = useNavigate(); 
 
     const handleSubmit = async e => {
@@ -19,16 +25,23 @@ const Login = () => {
                 baseURL,
                 JSON.stringify({ username: usr, password: pwd }),
                 {
-                    headers: { "Content-Type": "application/json" },
-                    withCredentials: true,
+                    headers: { "Content-Type": "application/json"},
                 }
             );
-            setSuccess(true);
-            setUserName("");
-            setPassword("");
+            const token = response?.data?.token;
+            console.log(token);
+            if (token) {
+              setAuth({ usr, token})
+              setUserName("");
+              setPassword("");
+              setSuccess(true);
+              navigate("/");
+            } else {
+              console.log("Token not retrieved")
+            }
         } catch (err) {
             if (!err?.response) {
-                setErrMsg("No Server Response");
+                console.log("No Server Response");
             }
         }
         
@@ -44,7 +57,11 @@ const Login = () => {
             </label>
             <label>
               <p>Password</p>
-              <input type="password" onChange={e => setPassword(e.target.value)} />
+              <input 
+                type="password" 
+                onChange={e => setPassword(e.target.value)} 
+                required
+              />
             </label>
             <div>
               <button type="submit">Submit</button>

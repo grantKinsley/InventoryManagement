@@ -3,7 +3,6 @@ import Login from "./Login.js"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-
 const baseURL = "http://localhost:8000/auth/register";
 
 const Register = () => {
@@ -44,6 +43,7 @@ const Register = () => {
               withCredentials: true,
             }
           );
+          console.log(JSON.stringify({ username: user, password: pwd }));
           setSuccess(true);
           console.log("Success");
           //clear state and controlled inputs
