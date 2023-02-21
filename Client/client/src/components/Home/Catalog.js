@@ -25,7 +25,8 @@ const Catalog = () => {
         const response = await axios.get(
             baseURL,
             {
-                headers: { "Content-Type": "application/json", "Bearer": auth.token },
+                headers: { "Content-Type": "application/json", 
+                "Bearer": auth.token },
             }
         );
         setFetched(true);
