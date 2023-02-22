@@ -35,7 +35,6 @@ const Catalog = () => {
 
     };
     const downloadCSV = async e => {
-        //console.log(auth.token);
         const reportURL = baseURL + "report"
         const response = await axios.get(
             reportURL,
