@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import axios from "axios";
 import AuthContext from "../../context-Api/AuthProvider"
-
+var fileDownload = require('js-file-download');
 
 const baseURL = "http://localhost:8000/amz_items/";
 
@@ -32,6 +32,22 @@ const Catalog = () => {
         setFetched(true);
         const result = JSON.parse(response.data);
         setData(result);
+
+    };
+    const downloadCSV = async e => {
+        //console.log(auth.token);
+        const reportURL = baseURL + "report"
+        const response = await axios.get(
+            reportURL,
+            { 
+                responseType: 'blob',
+            }
+        ).then(res => {
+            fileDownload(res.data, 'fileName.CSV');
+            console.log(res)
+        }).catch(err => {
+            console.log(err)
+        });
 
     };
 
@@ -85,6 +101,7 @@ const Catalog = () => {
             </form>
 
             <button onClick={handleGetAll}>Get All</button>
+            <button onClick={downloadCSV}>Download CSV</button>
         </div>
     );
 }

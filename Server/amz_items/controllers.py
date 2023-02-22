@@ -46,3 +46,10 @@ def patch_item(asin, new_params, token):
     amz_items.update_one(
         {"asin": asin}, {"$set": new_params})
     return JsonResponse({"Success": f"Document with asin {asin} updated"})
+
+def get_list():
+    items = list(amz_items.find({}))
+    return items
+def get_list_search(asin):
+    items = list(amz_items.find({"asin": asin}))
+    return items
