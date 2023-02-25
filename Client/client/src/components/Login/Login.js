@@ -29,6 +29,7 @@ const Login = () => {
                 }
             );
             const token = response?.data?.token;
+            sessionStorage.setItem('serverToken', token)  // store token locally
             console.log(token);
             if (token) {
               setAuth({ usr, token})

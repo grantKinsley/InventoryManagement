@@ -27,16 +27,17 @@ const Catalog = () => {
     useEffect(() => {
         const fetchData = async () => {
             // console.log(auth.token);
+            const accessToken = sessionStorage.getItem('serverToken');
             const response = await axios.get(
                 baseURL,
                 {
                     headers: { "Content-Type": "application/json", 
-                    "Bearer": auth.token },
+                    "Bearer": accessToken },
                 }
             );
             setFetched(true);
             const result = JSON.parse(response.data);
-            console.log(result);
+            // console.log(result);
             setData(result);
         }
         fetchData()
@@ -63,7 +64,7 @@ const Catalog = () => {
             .catch(console.error);
     }
 
-    if (!auth.token) {
+    if (sessionStorage.getItem('serverToken') === null) {
         return(<Navigate to="/login" />)
     }
 
