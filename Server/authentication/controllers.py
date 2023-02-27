@@ -18,6 +18,14 @@ auth = db.auth
 companies = db.companies
 
 
+def genToken(username, companyId):
+    expiration_date = datetime.datetime.now(
+        tz=datetime.timezone.utc) + datetime.timedelta(hours=1)
+    token = jwt.encode(
+        {"username": username, "companyId": companyId, "exp": expiration_date}, SECRET_KEY, algorithm="HS256")
+    return token
+
+
 def login(request):
     body = json.loads(request.body.decode('utf-8'))
     username = body.get("username")
@@ -33,24 +41,20 @@ def login(request):
     if not bcrypt.checkpw(password, hashed_password):
         return JsonResponse({"Error": "Invalid Username and/or Password"})
 
-    expiration_date = datetime.datetime.now(
-        tz=datetime.timezone.utc) + datetime.timedelta(hours=1)
-    token = jwt.encode(
-        {"username": username, "companyId": companyId, "exp": expiration_date}, SECRET_KEY, algorithm="HS256")
-
-    return JsonResponse({"token": token})
+    return JsonResponse({"token": genToken(username, companyId)})
 
 
 def register(request):
     body = json.loads(request.body.decode('utf-8'))
-    body["companyId"] = ObjectId(body.get("companyId"))
-    assert (companies.find_one({"_id": body["companyId"]}))
+    companyId = body.get("companyId")
+    assert (companies.find_one({"_id": ObjectId(companyId)}))
     password = body.get("password").encode()
     assert (password != None)
     password = bcrypt.hashpw(password, bcrypt.gensalt()).decode()
     body["password"] = password
+    body["companyId"] = ObjectId(companyId)
     auth.insert_one(body)
-    return JsonResponse({"Success": f"User {body.get('username')} created"})
+    return JsonResponse({"Success": f"User {body.get('username')} created", "token": genToken(body.get("username"), companyId)})
 
 
 # def get_items():
