@@ -1,10 +1,9 @@
 import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import AuthContext from "../../context-Api/AuthProvider";
+import { Navigate } from "react-router-dom";
 
 var fileDownload = require("js-file-download");
-
-import { Navigate } from "react-router-dom";
 
 const baseURL = "http://localhost:8000/amz_items/";
 
@@ -43,74 +42,74 @@ const Catalog = () => {
     };
     fetchData().catch(console.error);
   }, []);
-};
-const downloadCSV = async (e) => {
-  const reportURL = baseURL + "report";
-  const response = await axios
-    .get(reportURL, {
-      responseType: "blob",
-    })
-    .then((res) => {
-      fileDownload(res.data, "fileName.CSV");
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
 
-const handleGetOne = (e) => {
-  const fetchOne = async () => {
-    const url = baseURL + asin;
-    console.log(url);
-    const response = await axios.get(url, {
-      headers: { "Content-Type": "application/json", Bearer: auth.token },
-    });
-    setFetched(true);
-    const result = JSON.parse(response.data);
-    result[0].push({ getOne: "true" });
-    setData(result);
+  const downloadCSV = async (e) => {
+    const reportURL = baseURL + "report";
+    const response = await axios
+      .get(reportURL, {
+        responseType: "blob",
+      })
+      .then((res) => {
+        fileDownload(res.data, "fileName.CSV");
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
-  fetchOne().catch(console.error);
+
+  const handleGetOne = (e) => {
+    const fetchOne = async () => {
+      const url = baseURL + asin;
+      console.log(url);
+      const response = await axios.get(url, {
+        headers: { "Content-Type": "application/json", Bearer: auth.token },
+      });
+      setFetched(true);
+      const result = JSON.parse(response.data);
+      result[0].push({ getOne: "true" });
+      setData(result);
+    };
+    fetchOne().catch(console.error);
+  };
+
+  if (sessionStorage.getItem("serverToken") === null) {
+    return <Navigate to="/login" />;
+  }
+
+  if (fetched) {
+    return (
+      <div>
+        <form>
+          <label>
+            Search by Asin:
+            <input
+              type="text"
+              name="asin"
+              onChange={(e) => {
+                setAsin(e.target.value);
+              }}
+            />
+          </label>
+          <button onClick={handleGetOne}>Search</button>
+        </form>
+        {data.map((datum) => {
+          return (
+            <Card
+              key={datum.asin}
+              asin={datum.asin}
+              model={datum.model}
+              sellingPrice={datum.sellingPrice}
+              cost={datum.cost}
+              amzInv={datum.amzInv}
+            />
+          );
+        })}
+
+        <button onClick={downloadCSV}>Download CSV</button>
+      </div>
+    );
+  }
 };
-
-if (sessionStorage.getItem("serverToken") === null) {
-  return <Navigate to="/login" />;
-}
-
-if (fetched) {
-  return (
-    <div>
-      <form>
-        <label>
-          Search by Asin:
-          <input
-            type="text"
-            name="asin"
-            onChange={(e) => {
-              setAsin(e.target.value);
-            }}
-          />
-        </label>
-        <button onClick={handleGetOne}>Search</button>
-      </form>
-      {data.map((datum) => {
-        return (
-          <Card
-            key={datum.asin}
-            asin={datum.asin}
-            model={datum.model}
-            sellingPrice={datum.sellingPrice}
-            cost={datum.cost}
-            amzInv={datum.amzInv}
-          />
-        );
-      })}
-
-      <button onClick={handleGetAll}>Get All</button>
-      <button onClick={downloadCSV}>Download CSV</button>
-    </div>
-  );
-}
 
 export default Catalog;
