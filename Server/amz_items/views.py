@@ -19,8 +19,10 @@ def amz_items(request):
         if request.method == 'POST':
             body_as_dict = json.loads(request.body.decode('utf-8'))
             return controllers.create_item(body_as_dict, token)
+        else:
+            return JsonResponse({"Error 404": f"Invalid requst type"}, status=400)
     except Exception as err:
-        return JsonResponse({"Error 404": f"{err}"})
+        return JsonResponse({"Error 404": f"{err}"}, status=404)
 
 
 # Security token with csrf (supposed to stop people from hijacking your browser)
@@ -39,8 +41,10 @@ def amz_item(request, asin):
         if request.method == 'PATCH':
             update_params = json.loads(request.body.decode('utf-8'))
             return controllers.patch_item(asin, update_params, token)
+        else:
+            return JsonResponse({"Error 404": f"Invalid requst type"}, status=400)
     except Exception as err:
-        return JsonResponse({"Error 404": f"{err}"})
+        return JsonResponse({"Error 404": f"{err}"}, status=404)
 
 
 @csrf_exempt

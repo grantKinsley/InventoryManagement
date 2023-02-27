@@ -14,7 +14,7 @@ def login(request):
         if request.method == 'POST':
             return controllers.login(request)
         else:
-            return JsonResponse({"Error 404": f"Invalid requst type"})
+            return JsonResponse({"Error 404": f"Invalid requst type"}, status=400)
     except Exception as err:
         return JsonResponse({"Error": "Login attempt failed"}, status=401)
 
@@ -25,6 +25,6 @@ def register(request):
         if request.method == 'POST':
             return controllers.register(request)
         else:
-            return JsonResponse({"Error 404": f"Invalid requst type"})
+            return JsonResponse({"Error 404": f"Invalid requst type"}, status=400)
     except Exception as err:
-        return JsonResponse({"Error 404": f"{err}"})
+        return JsonResponse({"Error": f"{err}"}, status=400)
