@@ -18,8 +18,10 @@ def amz_items(request):
         if request.method == 'GET':
             return controllers.get_items(token)
         if request.method == 'POST':
-            body_as_dict = json.loads(request.body.decode('utf-8'))
-            return controllers.create_item(body_as_dict, token)
+            body = json.loads(request.body.decode('utf-8'))
+            if type(body) == dict:
+                body = [body]
+            return controllers.create_item(body, token)
         else:
             return JsonResponse({"Error 404": f"Invalid requst type"}, status=400)
     except Exception as err:
@@ -52,38 +54,42 @@ def amz_item(request, asin):
 def write_report(request):
     try:
         if request.method == 'GET':
-            
+
             lis = controllers.get_list()
             return downloadCSV(lis)
     except Exception as err:
         return JsonResponse({"Error 404": f"{err}"})
-def write_report_search(request,asin):
+
+
+def write_report_search(request, asin):
     try:
         if request.method == 'GET':
-            
+
             lis = controllers.get_list_search(asin)
             return downloadCSV(lis)
     except Exception as err:
         return JsonResponse({"Error 404": f"{err}"})
 
+
 def downloadCSV(lis):
     try:
         response = HttpResponse(
             content_type='text/csv',
-            headers={'Content-Disposition': 'attachment; filename="somefilename.csv"'},
+            headers={
+                'Content-Disposition': 'attachment; filename="somefilename.csv"'},
         )
         writer = CSV.writer(response)
 
-        #For exlcuding columns assuming the column names are passed as a list of strings
+        # For exlcuding columns assuming the column names are passed as a list of strings
         excludedColumns = []
-        if(len(lis) < 1):
+        if (len(lis) < 1):
             return response
         keys = list(lis[0].keys())
-        columnsNumbers =[]
+        columnsNumbers = []
         columnNames = []
         for i in range(len(keys)):
-            if(keys[i] in excludedColumns):
-                columnsNumbers.insert(0,i)
+            if (keys[i] in excludedColumns):
+                columnsNumbers.insert(0, i)
             else:
                 columnNames.append(keys[i])
 

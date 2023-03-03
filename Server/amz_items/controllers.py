@@ -27,10 +27,11 @@ def get_item(asin, token):
     return JsonResponse(item, safe=False)
 
 
-def create_item(item, token):
-    item["companyId"] = ObjectId(token.get("companyId"))
-    amz_items.insert_one(item).inserted_id
-    return JsonResponse({"Success": f"Document with asin {item['asin']} created"})
+def create_item(body, token):
+    for item in body:
+        item["companyId"] = ObjectId(token.get("companyId"))
+    amz_items.insert_many(body)
+    return JsonResponse({"Success": f"{len(body)} documents created"})
 
 
 def delete_item(asin, token):
@@ -47,9 +48,12 @@ def patch_item(asin, new_params, token):
         {"asin": asin}, {"$set": new_params})
     return JsonResponse({"Success": f"Document with asin {asin} updated"})
 
+
 def get_list():
     items = list(amz_items.find({}))
     return items
+
+
 def get_list_search(asin):
     items = list(amz_items.find({"asin": asin}))
     return items
