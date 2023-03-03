@@ -35,6 +35,7 @@ const Login = () => {
         setPassword("");
         navigate("/");
       } else {
+        window.alert("Invalid Username and/or Password");
         console.log("Token not retrieved");
       }
     } catch (err) {
