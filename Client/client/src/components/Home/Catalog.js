@@ -96,8 +96,8 @@ const Catalog = () => {
         {data.map((datum) => {
           return (
             <Card
-              key={datum.asin}
-              asin={datum.asin}
+              key={datum.ASIN}
+              asin={datum.ASIN}
               model={datum.model}
               sellingPrice={datum.sellingPrice}
               cost={datum.cost}
