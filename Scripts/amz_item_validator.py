@@ -11,13 +11,13 @@ amz_items = db.amz_items
 schema = {"$jsonSchema":
           {
               "bsonType": "object",
-              "required": ["asin", "model", "sellingPrice", "cost", "amzInv", "companyId"],
-              "additionalProperties": False,
+              "required": ["ASIN", "companyId"],
+              "additionalProperties": True,
               "properties": {
                   "_id": {  # Auto populated by mongo
                       "bsonType": "objectId"
                   },
-                  "asin": {
+                  "ASIN": {
                       "bsonType": "string",
                       "minLength": 10,
                       "maxLength": 10,
@@ -82,5 +82,5 @@ db.command(cmd)
 print("Validator Updated")
 
 # Enforces that "asin" field is unique value
-amz_items.create_index("asin", unique=True)
+amz_items.create_index("ASIN", unique=True)
 print("Index Updated")
