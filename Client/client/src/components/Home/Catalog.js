@@ -10,15 +10,27 @@ const baseURL = "http://localhost:8000/amz_items/";
 const Card = (props) => {
   return (
     <div style={{ padding: 10 }}>
-      <div>
-        <b>ASIN: {props.asin}</b>{" "}
-      </div>
-      <div>Model: {props.model} </div>
-      <div>Selling Price: {props.sellingPrice} </div>
-      <div>Cost to Produce Unit: {props.cost} </div>
-      <div>Inventory Count: {props.amzInv} </div>
+      {Object.keys(props.item).map((key) => (
+        <div>
+          {key !== "_id" && key !== "companyId"
+            ? key + ": " + String(props.item[key])
+            : ""}
+        </div>
+      ))}
     </div>
   );
+  // return (
+  //   <div style={{ padding: 10 }}>
+  //     <div>
+  //       <b>ASIN: {props.item.ASIN}</b>
+  //     </div>
+
+  //     <div>Model: {props.model} </div>
+  //     <div>Selling Price: {props.sellingPrice} </div>
+  //     <div>Cost to Produce Unit: {props.cost} </div>
+  //     <div>Inventory Count: {props.amzInv} </div>
+  //   </div>
+  // );
 };
 
 const Catalog = () => {
@@ -92,20 +104,11 @@ const Catalog = () => {
           </label>
           <button onClick={handleGetOne}>Search</button>
         </form>
-        {data.map((datum) => {
-          return (
-            <Card
-              key={datum.ASIN}
-              asin={datum.ASIN}
-              model={datum.model}
-              sellingPrice={datum.sellingPrice}
-              cost={datum.cost}
-              amzInv={datum.amzInv}
-            />
-          );
-        })}
-
         <button onClick={downloadCSV}>Download CSV</button>
+
+        {data.map((datum) => {
+          return <Card item={datum} />;
+        })}
       </div>
     );
   }
