@@ -1,7 +1,10 @@
 from django.http import JsonResponse
-from pymongo import MongoClient
+from pymongo import MongoClient, UpdateOne
 from bson.json_util import dumps
 from bson import ObjectId
+
+from . import validator  # nopep8
+import mongo_schema
 
 client = MongoClient(
     "mongodb+srv://inventory-user:sUlruqlhO7bfCfFj@inventory-cluster.acpnb7c.mongodb.net/?retryWrites=true&w=majority")
@@ -21,35 +24,60 @@ def get_items(token):
 
 
 def get_item(asin, token):
-    item = amz_items.find_one({"asin": asin})
+    item = amz_items.find_one({"ASIN": asin})
     assert (str(item["companyId"]) == token.get("companyId"))
     item = dumps(item)
     return JsonResponse(item, safe=False)
 
 
-def create_item(item, token):
-    item["companyId"] = ObjectId(token.get("companyId"))
-    amz_items.insert_one(item).inserted_id
-    return JsonResponse({"Success": f"Document with asin {item['asin']} created"})
+def delete_all(token):
+    companyId = ObjectId(token.get("companyId"))
+    amz_items.delete_many({"companyId": companyId})
+    return JsonResponse("Deleted all company documents", safe=False)
+
+
+def create_item(body, token):
+    upsert_operations = []
+    failed_documents = []
+    for item in body:
+        print(item)
+        item["companyId"] = ObjectId(token.get("companyId"))
+        try:
+            print(
+                f"VALIDATING:{mongo_schema.validate(item, validator.schema.get('$jsonSchema'))}")
+            upsert_operations.append(
+                UpdateOne({"ASIN": item["ASIN"]}, {"$set": item}, upsert=True))
+        except Exception as err:
+            print(f"VALIDATION FAILED: {err}")
+            failed_documents.append(item)
+    print(len(upsert_operations), upsert_operations)
+    res = amz_items.bulk_write(upsert_operations)
+    # print(res)
+    return JsonResponse({"Success": f"{len(upsert_operations)} documents created"})
 
 
 def delete_item(asin, token):
-    item = amz_items.find_one({"asin": asin})
+    print("HERE")
+    item = amz_items.find_one({"ASIN": asin})
+    print(item, token.get("companyId"))
     assert (str(item["companyId"]) == token.get("companyId"))
-    amz_items.delete_one({'asin': asin})
+    amz_items.delete_one({"ASIN": asin})
     return JsonResponse({"Success": f"Document with asin {asin} deleted"})
 
 
 def patch_item(asin, new_params, token):
-    item = amz_items.find_one({"asin": asin})
+    item = amz_items.find_one({"ASIN": asin})
     assert (str(item["companyId"]) == token.get("companyId"))
     amz_items.update_one(
-        {"asin": asin}, {"$set": new_params})
+        {"ASIN": asin}, {"$set": new_params})
     return JsonResponse({"Success": f"Document with asin {asin} updated"})
+
 
 def get_list():
     items = list(amz_items.find({}))
     return items
+
+
 def get_list_search(asin):
-    items = list(amz_items.find({"asin": asin}))
+    items = list(amz_items.find({"ASIN": asin}))
     return items
