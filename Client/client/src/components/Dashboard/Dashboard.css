@@ -1,0 +1,29 @@
+h4 {
+    color: rgb(122, 122, 122);
+    font-weight: normal;
+}
+
+.green {
+    color: rgb(53, 199, 53);
+}
+
+.red {
+    color: red;
+}
+
+.container {
+    background-color: rgb(212, 201, 201);
+}
+
+.card {
+    background-color: white;
+    width: 400px;
+    height: 400px;
+    padding: 0px 50px 5px 50px;
+    margin: 5px;
+}
+
+.card-container {
+    display: flex;
+    flex-direction: column;
+}

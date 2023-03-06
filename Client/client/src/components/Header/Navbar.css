@@ -1,10 +1,24 @@
-ul {
-    list-style: none;
+.left {
+    width: 20%;
+    float: left;
+    height: 1000px;
 }
 
-li {
-    /* float:left; */
-    display: inline;
-    padding-right: 20px;
-    /* margin: 10px; */
+.nav {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    padding-left: 30px;
+}
+
+.nav li {
+    margin: 1px;
+    padding: 1px;
+}
+
+.nav li a {
+    display: block;
+    line-height: 3em;
+    width: 100%;
+    text-decoration: none;
 }

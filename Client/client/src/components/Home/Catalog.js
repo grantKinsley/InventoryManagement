@@ -67,7 +67,6 @@ const Catalog = () => {
       });
       setFetched(true);
       const result = JSON.parse(response.data);
-      result[0].push({ getOne: "true" });
       setData(result);
     };
     fetchOne().catch(console.error);
