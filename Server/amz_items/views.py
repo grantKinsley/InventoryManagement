@@ -22,9 +22,12 @@ def amz_items(request):
             if type(body) == dict:
                 body = [body]
             return controllers.create_item(body, token)
+        if request.method == 'DELETE':
+            return controllers.delete_all(token)
         else:
             return JsonResponse({"Error 404": f"Invalid requst type"}, status=400)
     except Exception as err:
+        print(err)
         return JsonResponse({"Error 404": f"{err}"}, status=404)
 
 
@@ -47,6 +50,7 @@ def amz_item(request, asin):
         else:
             return JsonResponse({"Error 404": f"Invalid requst type"}, status=400)
     except Exception as err:
+        print(err)
         return JsonResponse({"Error 404": f"{err}"}, status=404)
 
 
@@ -58,6 +62,7 @@ def write_report(request):
             lis = controllers.get_list()
             return downloadCSV(lis)
     except Exception as err:
+        print(err)
         return JsonResponse({"Error 404": f"{err}"})
 
 
@@ -68,6 +73,7 @@ def write_report_search(request, asin):
             lis = controllers.get_list_search(asin)
             return downloadCSV(lis)
     except Exception as err:
+        print(err)
         return JsonResponse({"Error 404": f"{err}"})
 
 

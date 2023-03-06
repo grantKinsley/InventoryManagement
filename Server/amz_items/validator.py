@@ -20,7 +20,7 @@ schema = {"$jsonSchema":
                   "ASIN": {
                       "bsonType": "string",
                       "minLength": 10,
-                      "maxLength": 10,
+                      # "maxLength": 10,
                       "description": "must be a string of length 10 and is required"
                   },
                   "model": {
@@ -82,5 +82,5 @@ db.command(cmd)
 print("Validator Updated")
 
 # Enforces that "asin" field is unique value
-amz_items.create_index("ASIN", unique=True)
-print("Index Updated")
+# amz_items.create_index("ASIN", unique=True)
+# print("Index Updated")
