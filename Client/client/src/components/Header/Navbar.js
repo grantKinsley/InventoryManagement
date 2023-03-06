@@ -12,25 +12,27 @@ const Navbar = () => {
     sessionStorage.removeItem("serverToken"); // store token locally
   };
   return (
-    <ul>
-      <li>
-        <Link to="/">Home</Link>
-      </li>
-      <li>
-        <Link to="/catalog">Catalog</Link>
-      </li>
-      <li>
-        <Link to="/upload">Upload</Link>
-      </li>
-      <li>
-        <Link to="/">Settings</Link>
-      </li>
-      <li>
-        <Link to="/login" onClick={logout}>
-          Logout
-        </Link>
-      </li>
-    </ul>
+    <div className="left">
+      <ul className="nav">
+        <li>
+          <Link to="/">Dashboard</Link>
+        </li>
+        <li>
+          <Link to="/catalog">Catalog</Link>
+        </li>
+        <li>
+          <Link to="/upload">Upload</Link>
+        </li>
+        {/* <li>
+          <Link to="/">Settings</Link>
+        </li> */}
+        <li>
+          <Link to="/login" onClick={logout}>
+            Logout
+          </Link>
+        </li>
+      </ul>
+    </div>
   );
 };
 
