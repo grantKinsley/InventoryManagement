@@ -11,7 +11,7 @@ const Card = (props) => {
   return (
     <div style={{ padding: 10 }}>
       {Object.keys(props.item).map((key) => (
-        <div>
+        <div key={key}>
           {key !== "_id" && key !== "companyId"
             ? key + ": " + String(props.item[key])
             : ""}
@@ -107,7 +107,7 @@ const Catalog = () => {
         <button onClick={downloadCSV}>Download CSV</button>
 
         {data.map((datum) => {
-          return <Card item={datum} />;
+          return <Card item={datum} key={datum.ASIN} />;
         })}
       </div>
     );
