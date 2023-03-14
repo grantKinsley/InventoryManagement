@@ -48,7 +48,7 @@ def create_item(body, token):
             if "" in item:
                 item.pop("")
             upsert_operations.append(
-                UpdateOne({"ASIN": item["ASIN"]}, {"$set": item}, upsert=True))
+                UpdateOne({"ASIN": item["ASIN"], "companyId": item["companyId"]}, {"$set": item}, upsert=True))
         except Exception as err:
             print(f"VALIDATION FAILED: {err}")
             failed_documents.append(item)
