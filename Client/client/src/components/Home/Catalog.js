@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import AuthContext from "../../context-Api/AuthProvider";
 import { Navigate } from "react-router-dom";
+import "./Catalog.css"
 
 var fileDownload = require("js-file-download");
 
@@ -105,10 +106,11 @@ const Catalog = () => {
           <button onClick={handleGetOne}>Search</button>
         </form>
         <button onClick={downloadCSV}>Download CSV</button>
-
+        <div className="scrollable-container">
         {data.map((datum) => {
           return <Card item={datum} key={datum.ASIN} />;
         })}
+        </div>
       </div>
     );
   }
