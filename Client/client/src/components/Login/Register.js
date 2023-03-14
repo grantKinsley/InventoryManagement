@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 const baseURL = "http://localhost:8000/auth/register";
 
