@@ -2,8 +2,8 @@ import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import AuthContext from "../../context-Api/AuthProvider";
 import { Navigate } from "react-router-dom";
-import "./Catalog.css"
-import placeholderImg from "./logo192.png"
+import "./Catalog.css";
+import placeholderImg from "./logo192.png";
 
 var fileDownload = require("js-file-download");
 
@@ -23,18 +23,26 @@ const Card = (props) => {
   // );
   // console.log(props.item)
   return (
-    <div style={{ padding: 10, margin:10, border: "solid", borderRadius: 5, maxWidth: 350}}>
-    <div className="card-info-container">
-      <img src={placeholderImg} style={{ maxWidth:50 }}/>
-      <div>
-        <div style={{ fontSize: 20 }}>
-          <b>{props.item["Product Title"]}</b>
+    <div
+      style={{
+        padding: 10,
+        margin: 10,
+        border: "solid",
+        borderRadius: 5,
+        maxWidth: 350,
+      }}
+    >
+      <div className="card-info-container">
+        <img src={placeholderImg} style={{ maxWidth: 50 }} />
+        <div>
+          <div style={{ fontSize: 20 }}>
+            <b>{props.item["Product Title"]}</b>
+          </div>
+          <div>ASIN: {props.item.ASIN}</div>
         </div>
-        <div>ASIN: {props.item.ASIN}</div>
+        <div>{props.item["Sellable On Hand Units"]}</div>
+        {/* <div>Sales</div> */}
       </div>
-      <div>{props.item["Sellable On Hand Units"]}</div>
-      {/* <div>Sales</div> */}
-    </div>
     </div>
   );
 };
@@ -55,7 +63,7 @@ const Catalog = () => {
       });
       setFetched(true);
       const result = JSON.parse(response.data);
-      // console.log(result);
+      console.log(result);
       setData(result);
     };
     fetchData().catch(console.error);
@@ -74,6 +82,15 @@ const Catalog = () => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const deleteCompanyData = async (e) => {
+    const accessToken = sessionStorage.getItem("serverToken");
+    const response = await axios.delete(baseURL, {
+      headers: { "Content-Type": "application/json", Bearer: accessToken },
+    });
+    console.log(response);
+    setData([]);
   };
 
   const handleGetOne = (e) => {
@@ -111,10 +128,12 @@ const Catalog = () => {
           <button onClick={handleGetOne}>Search</button>
         </form>
         <button onClick={downloadCSV}>Download CSV</button>
+        <button onClick={deleteCompanyData}>Delete Company Data</button>
+
         <div className="scrollable-container">
-        {data.map((datum) => {
-          return <Card item={datum} key={datum.ASIN} />;
-        })}
+          {data.map((datum) => {
+            return <Card item={datum} key={datum.ASIN} />;
+          })}
         </div>
       </div>
     );
