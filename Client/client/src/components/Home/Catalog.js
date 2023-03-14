@@ -3,35 +3,40 @@ import axios from "axios";
 import AuthContext from "../../context-Api/AuthProvider";
 import { Navigate } from "react-router-dom";
 import "./Catalog.css"
+import placeholderImg from "./logo192.png"
 
 var fileDownload = require("js-file-download");
 
 const baseURL = "http://localhost:8000/amz_items/";
 
 const Card = (props) => {
-  return (
-    <div style={{ padding: 10 }}>
-      {Object.keys(props.item).map((key) => (
-        <div key={key}>
-          {key !== "_id" && key !== "companyId"
-            ? key + ": " + String(props.item[key])
-            : ""}
-        </div>
-      ))}
-    </div>
-  );
   // return (
   //   <div style={{ padding: 10 }}>
-  //     <div>
-  //       <b>ASIN: {props.item.ASIN}</b>
-  //     </div>
-
-  //     <div>Model: {props.model} </div>
-  //     <div>Selling Price: {props.sellingPrice} </div>
-  //     <div>Cost to Produce Unit: {props.cost} </div>
-  //     <div>Inventory Count: {props.amzInv} </div>
+  //     {Object.keys(props.item).map((key) => (
+  //       <div key={key}>
+  //         {key !== "_id" && key !== "companyId"
+  //           ? key + ": " + String(props.item[key])
+  //           : ""}
+  //       </div>
+  //     ))}
   //   </div>
   // );
+  // console.log(props.item)
+  return (
+    <div style={{ padding: 10, margin:10, border: "solid", borderRadius: 5, maxWidth: 350}}>
+    <div className="card-info-container">
+      <img src={placeholderImg} style={{ maxWidth:50 }}/>
+      <div>
+        <div style={{ fontSize: 20 }}>
+          <b>{props.item["Product Title"]}</b>
+        </div>
+        <div>ASIN: {props.item.ASIN}</div>
+      </div>
+      <div>{props.item["Sellable On Hand Units"]}</div>
+      {/* <div>Sales</div> */}
+    </div>
+    </div>
+  );
 };
 
 const Catalog = () => {
