@@ -55,11 +55,13 @@ def amz_item(request, asin):
 
 
 @csrf_exempt
+@middleware.authentication_required
 def write_report(request):
     try:
         if request.method == 'GET':
-
-            lis = controllers.get_list()
+            token = request.META.get("decoded_token")
+            lis = controllers.get_list_search(token)
+            #lis = controllers.get_list()
             return downloadCSV(lis)
     except Exception as err:
         print(err)

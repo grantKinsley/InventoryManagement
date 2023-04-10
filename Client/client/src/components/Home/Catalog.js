@@ -57,10 +57,14 @@ const Catalog = () => {
   }, []);
 
   const downloadCSV = async (e) => {
+    const accessToken = sessionStorage.getItem("serverToken");
     const reportURL = baseURL + "report";
     const response = await axios
       .get(reportURL, {
         responseType: "blob",
+        headers:{
+          Bearer: accessToken,
+        }
       })
       .then((res) => {
         fileDownload(res.data, "fileName.CSV");
