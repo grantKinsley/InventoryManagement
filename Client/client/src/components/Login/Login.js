@@ -47,27 +47,32 @@ const Login = () => {
   };
 
   return (
-    <div className="login-wrapper">
-      <h1>Please Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <p>Username</p>
-          <input type="text" onChange={(e) => setUserName(e.target.value)} />
-        </label>
-        <label>
-          <p>Password</p>
-          <input
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        <div>
-          <button type="submit">Submit</button>
-        </div>
-      </form>
-      <button onClick={() => navigate("/register")}>Register here</button>
+    <div className="full-page-container">
+      <div className="header" style={{ height: 100 }}></div>
+      <div className="login-wrapper">
+        <h1>Please Log In</h1>
+        <form onSubmit={handleSubmit}>
+          <label>
+            <p>Username</p>
+            <input type="text" onChange={(e) => setUserName(e.target.value)} />
+          </label>
+          <label>
+            <p>Password</p>
+            <input
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
+          <div>
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+        <button onClick={() => navigate("/register")}>Register here</button>
+      </div>
+      <div className="footer" style={{ height: 100 }}></div>
     </div>
+    
   );
 };
 

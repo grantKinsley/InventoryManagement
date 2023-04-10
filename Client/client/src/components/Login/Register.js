@@ -45,29 +45,33 @@ const Register = () => {
   };
 
   return (
-    <div className="login-wrapper">
-      <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <p>Username</p>
-          <input type="text" onChange={(e) => setUser(e.target.value)} />
-        </label>
-        <label>
-          <p>Password</p>
-          <input type="password" onChange={(e) => setPwd(e.target.value)} />
-        </label>
-        <label>
-          <p>CompanyId</p>
-          <input
-            type="companyId"
-            onChange={(e) => setCompanyId(e.target.value)}
-          />
-        </label>
-        <div>
-          <button type="submit">Submit</button>
-        </div>
-      </form>
-      <button onClick={() => navigate("/login")}>Login here</button>
+    <div className="full-page-container">
+      <div className="header" style={{ height: 100 }}></div>
+      <div className="login-wrapper">
+        <h1>Register</h1>
+        <form onSubmit={handleSubmit}>
+          <label>
+            <p>Username</p>
+            <input type="text" onChange={(e) => setUser(e.target.value)} />
+          </label>
+          <label>
+            <p>Password</p>
+            <input type="password" onChange={(e) => setPwd(e.target.value)} />
+          </label>
+          <label>
+            <p>CompanyId</p>
+            <input
+              type="companyId"
+              onChange={(e) => setCompanyId(e.target.value)}
+            />
+          </label>
+          <div>
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+        <button onClick={() => navigate("/login")}>Login here</button>
+      </div>
+      <div className="footer" style={{ height: 100 }}></div>
     </div>
   );
 };

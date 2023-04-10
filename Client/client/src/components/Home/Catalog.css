@@ -1,4 +1,12 @@
 .scrollable-container {
     overflow-y: auto;
     height: 500px;
+    margin-top: 20px;
+}
+
+.card-info-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-self: center;
 }

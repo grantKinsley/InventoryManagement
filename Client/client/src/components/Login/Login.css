@@ -5,3 +5,14 @@
     border: solid #383636;
     border-radius: 15px;
 }
+
+.full-page-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+button {
+    margin-top: 25px;
+}

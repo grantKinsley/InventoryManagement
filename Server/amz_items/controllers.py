@@ -56,12 +56,13 @@ def create_item(body, token):
             # print(
             #     f"VALIDATING:{mongo_schema.validate(item, validator.schema.get('$jsonSchema'))}")
             # #Upsert updates if data is there, inserts otherwise
+            if "" in item:
+                item.pop("")
             upsert_operations.append(
                 UpdateOne({"ASIN": item["ASIN"]}, {"$set": item}, upsert=True))
             
             
             print("DONE")
-
 
         except Exception as err:
             print(f"VALIDATION FAILED: {err}")

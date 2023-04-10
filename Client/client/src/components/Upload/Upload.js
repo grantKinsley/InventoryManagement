@@ -77,8 +77,10 @@ const Upload = () => {
           headers: { "Content-Type": "application/json", Bearer: accessToken },
         });
         console.log(response);
+        window.alert(`Success: ${response.data["Success"]}`);
       } catch (err) {
         console.log(err);
+        window.alert(err);
       }
     };
     reader.readAsText(file);
