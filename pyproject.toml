@@ -13,6 +13,7 @@ django = "^4.1.5"
 bcrypt = "^4.0.1"
 pyjwt = "^2.6.0"
 mongo-schema = "^1.0.0.post0"
+django-cors-headers = "^3.14.0"
 
 
 [tool.poetry.group.dev.dependencies]

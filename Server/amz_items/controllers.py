@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from pymongo import MongoClient, UpdateOne
 from bson.json_util import dumps
 from bson import ObjectId
+import datetime
 
 from . import validator  # nopep8
 import mongo_schema
@@ -12,6 +13,8 @@ client = MongoClient(
 db = client["inventory-cluster"]
 
 amz_items = db.amz_items
+
+priceTimeSeries = db.priceTimeSeries
 
 
 def get_items(token):
@@ -39,16 +42,28 @@ def delete_all(token):
 def create_item(body, token):
     upsert_operations = []
     failed_documents = []
+    #For loop expects body to be a list of dictionaries. dict key values are csv column names
     for item in body:
         print(item)
         item["companyId"] = ObjectId(token.get("companyId"))
+
         try:
-            print(
-                f"VALIDATING:{mongo_schema.validate(item, validator.schema.get('$jsonSchema'))}")
+            priceTimeSeries.insert_one({
+                'metadata': {'ASIN': item["ASIN"], 'companyID': ObjectId(token.get('companyId'))},
+                'timestamp': datetime.datetime.now(),
+                'price': item['sellingPrice']
+            })
+            # print(
+            #     f"VALIDATING:{mongo_schema.validate(item, validator.schema.get('$jsonSchema'))}")
+            # #Upsert updates if data is there, inserts otherwise
             if "" in item:
                 item.pop("")
             upsert_operations.append(
-                UpdateOne({"ASIN": item["ASIN"], "companyId": item["companyId"]}, {"$set": item}, upsert=True))
+                UpdateOne({"ASIN": item["ASIN"]}, {"$set": item}, upsert=True))
+            
+            
+            print("DONE")
+
         except Exception as err:
             print(f"VALIDATION FAILED: {err}")
             failed_documents.append(item)
@@ -80,6 +95,6 @@ def get_list():
     return items
 
 
-def get_list_search(asin):
-    items = list(amz_items.find({"ASIN": asin}))
+def get_list_search(token):
+    items = list(amz_items.find({"companyId": ObjectId(token.get("companyId"))}))
     return items
