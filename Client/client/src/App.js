@@ -7,6 +7,7 @@ import Login from "./components/Login/Login.js"
 import Register from "./components/Login/Register.js"
 import Upload from './components/Upload/Upload';
 import Dashboard from './components/Dashboard/Dashboard';
+import History from './components/History/History.js';
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
             element={<Register />} />
           <Route exact path="/upload"
             element={<Upload />} />
+          <Route exact path="/history"
+            element={<History />} />
 
           <Route path="*"
             element={<Navigate to="/" />} />

@@ -23,9 +23,9 @@ const Navbar = () => {
         <li>
           <Link to="/upload">Upload</Link>
         </li>
-        {/* <li>
-          <Link to="/">Settings</Link>
-        </li> */}
+        <li>
+          <Link to="/history">History</Link>
+        </li>
         <li>
           <Link to="/login" onClick={logout}>
             Logout
