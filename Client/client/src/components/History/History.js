@@ -93,8 +93,10 @@ const History = () => {
 				{timestamp}
 				{price} */}
 			</div>
+			<div>
+				<canvas id="charts" width="200" height="200"></canvas>
+			</div>
 
-			<div id="charts">placehold</div>
 			
 		</div>
 		
