@@ -24,6 +24,9 @@ const Navbar = () => {
           <Link to="/upload">Upload</Link>
         </li>
         <li>
+          <Link to="/data">Analyze</Link>
+        </li>
+        <li>
           <Link to="/history">History</Link>
         </li>
         <li>

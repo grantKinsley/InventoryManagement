@@ -7,6 +7,7 @@ import Login from "./components/Login/Login.js"
 import Register from "./components/Login/Register.js"
 import Upload from './components/Upload/Upload';
 import Dashboard from './components/Dashboard/Dashboard';
+import RecordList from './components/Data/data';
 import History from './components/History/History.js';
 
 function App() {
@@ -24,6 +25,8 @@ function App() {
             element={<Register />} />
           <Route exact path="/upload"
             element={<Upload />} />
+          <Route exact path="/data"
+            element={<RecordList />} />
           <Route exact path="/history"
             element={<History />} />
 
