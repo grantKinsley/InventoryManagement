@@ -4,12 +4,17 @@ import AuthContext from "../../context-Api/AuthProvider";
 import { Navigate } from "react-router-dom";
 import Chart from 'chart.js/auto';
 import { Line } from "react-chartjs-2";
+import { element } from "prop-types";
 
 // import "./History.css"
 
 
 const baseURL = "http://localhost:8000/amz_items/";
 const History = () => {
+	const [data, setData] = useState(0);
+	const [timestamp, setTimestamp] = useState(0)	// x axis
+	const [price, setPrice] = useState(0)			// y axis
+
 	if (sessionStorage.getItem("serverToken") === null) {
 		return <Navigate to="/login" />;
 	}
@@ -34,30 +39,62 @@ const History = () => {
 				data: yAxis
 			}]
 		}
+		// console.log(response.data)
+		const result = JSON.parse(response.data);
+		// console.log(result)
+		const tuples = []
+		result.forEach(element => {
+			tuples.push({
+				'timestamp': element['timestamp']['$date'], 
+				'price': element['price']})
+		});
+		// console.log(tuples)
+		tuples.sort(function(a,b){
+			return a.timestamp - b.timestamp;
+		});
+		// console.log(tuples)
+		const timestamp = []
+		const price = []
+		tuples.forEach(element => {
+			timestamp.push(element['timestamp'])
+			price.push(element['price'])
+		})
+		console.log(timestamp)
+		console.log(price)
+		setTimestamp(timestamp)
+		setPrice(price)
+		// setData(tuples);
 		const LineChart = () => {
 			<div>
 				<Line data={data} />
 			</div>
 		}
 		
-
-		// new Chart(charts,{
-		// 	type:"line",
-		// 	data: {
-		// 		labels:xAxis,
-		// 		datasets:[{
-		// 			label:"Price History",
-		// 			data:yAxis,
-		// 			borderColor:"black",
-		// 			fill:false,
-		// 		}]
-		// 	}
-		// })
+		const charts = document.getElementById("charts");
+		new Chart(charts,{
+			type:"line",
+			data: {
+				labels:timestamp,
+				datasets:[{
+					label:"Price History",
+					data:price,
+					borderColor:"black",
+					fill:false,
+				}]
+			}
+		})
 	}
 
 	return (
 		<div className="container">
 			<button onClick={getTimeSeries}>Test Time Series</button>
+			<div>
+				{/* {data}
+				{timestamp}
+				{price} */}
+			</div>
+
+			<div id="charts">placehold</div>
 			
 		</div>
 		
