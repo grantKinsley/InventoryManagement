@@ -20,7 +20,7 @@ const History = () => {
 	}
 
 	var tempASIN = "9876543210"
-	
+	tempASIN = 'ASINTEST11'
 	const getTimeSeries = async () => {
 		const accessToken = sessionStorage.getItem("serverToken");
 		//response should be a list of dictionaries
