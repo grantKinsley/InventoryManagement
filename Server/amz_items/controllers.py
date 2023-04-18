@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from pymongo import MongoClient, UpdateOne
+from pymongo import MongoClient, UpdateOne, InsertOne
 from bson.json_util import dumps
 from bson import ObjectId
 import datetime
@@ -41,35 +41,42 @@ def delete_all(token):
 
 def create_item(body, token):
     upsert_operations = []
+    time_series_operations = []
     failed_documents = []
-    #For loop expects body to be a list of dictionaries. dict key values are csv column names
+    # For loop expects body to be a list of dictionaries. dict key values are csv column names
+    curTime = datetime.datetime.now()
     for item in body:
         print(item)
         item["companyId"] = ObjectId(token.get("companyId"))
 
         try:
-            priceTimeSeries.insert_one({
-                'metadata': {'ASIN': item["ASIN"], 'companyID': ObjectId(token.get('companyId'))},
-                'timestamp': datetime.datetime.now(),
-                'price': item['sellingPrice']
-            })
-            # print(
-            #     f"VALIDATING:{mongo_schema.validate(item, validator.schema.get('$jsonSchema'))}")
+            # priceTimeSeries.insert_one({
+            #     'metadata': {'ASIN': item["ASIN"], 'companyID': ObjectId(token.get('companyId'))},
+            #     'timestamp': datetime.datetime.now(),
+            #     'price': item['sellingPrice']
+            # })
+            print(
+                f"VALIDATING:{mongo_schema.validate(item, validator.schema.get('$jsonSchema'))}")
             # #Upsert updates if data is there, inserts otherwise
             if "" in item:
                 item.pop("")
             upsert_operations.append(
                 UpdateOne({"ASIN": item["ASIN"]}, {"$set": item}, upsert=True))
-            
-            
+            item['metadata'] = {'ASIN': item["ASIN"],
+                                'companyID': ObjectId(token.get('companyId'))}
+            item['timestamp'] = curTime
+            item['price'] = 25 if 'sellingPrice' not in item else item['sellingPrice']
+            time_series_operations.append(
+                InsertOne(item)
+            )
             print("DONE")
 
         except Exception as err:
             print(f"VALIDATION FAILED: {err}")
             failed_documents.append(item)
     print(len(upsert_operations), upsert_operations)
-    res = amz_items.bulk_write(upsert_operations)
-    # print(res)
+    amz_items.bulk_write(upsert_operations)
+    priceTimeSeries.bulk_write(time_series_operations)
     return JsonResponse({"Success": f"{len(upsert_operations)} documents created"})
 
 
@@ -96,11 +103,14 @@ def get_list():
 
 
 def get_list_search(token):
-    items = list(amz_items.find({"companyId": ObjectId(token.get("companyId"))}))
+    items = list(amz_items.find(
+        {"companyId": ObjectId(token.get("companyId"))}))
     return items
 
-def getTimeSeries(asin,token):
-    #items  = list(priceTimeSeries.find({"metadata": {"ASIN" : asin,"companyId": ObjectId(token.get("companyId"))}}))
-    #items  = list(priceTimeSeries.find({$and:[{"metadata.ASIN": asin}, {"metadata.ASIN": asin}]}))
-    items  = list(priceTimeSeries.find({"metadata.ASIN": int(asin), "metadata.companyID":ObjectId(token.get("companyId"))}))
+
+def getTimeSeries(asin, token):
+    # items  = list(priceTimeSeries.find({"metadata": {"ASIN" : asin,"companyId": ObjectId(token.get("companyId"))}}))
+    # items  = list(priceTimeSeries.find({$and:[{"metadata.ASIN": asin}, {"metadata.ASIN": asin}]}))
+    items = list(priceTimeSeries.find({"metadata.ASIN": 
+        asin, "metadata.companyID": ObjectId(token.get("companyId"))}))
     return JsonResponse(dumps(items), safe=False)
