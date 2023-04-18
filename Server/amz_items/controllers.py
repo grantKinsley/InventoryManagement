@@ -62,7 +62,7 @@ def create_item(body, token):
                 item.pop("")
             upsert_operations.append(
                 UpdateOne({"ASIN": item["ASIN"]}, {"$set": item}, upsert=True))
-            item['metadata'] = {'ASIN': item["ASIN"],
+            item['metadata'] = {'ASIN': str(item["ASIN"]),
                                 'companyID': ObjectId(token.get('companyId'))}
             item['timestamp'] = curTime
             item['price'] = 25 if 'sellingPrice' not in item else item['sellingPrice']
