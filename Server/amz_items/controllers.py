@@ -114,3 +114,4 @@ def getTimeSeries(asin, token):
     items = list(priceTimeSeries.find({"metadata.ASIN": 
         asin, "metadata.companyID": ObjectId(token.get("companyId"))}))
     return JsonResponse(dumps(items), safe=False)
+
