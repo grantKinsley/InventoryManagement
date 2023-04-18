@@ -6,7 +6,7 @@ import Chart from 'chart.js/auto';
 import { Line } from "react-chartjs-2";
 import { element } from "prop-types";
 
-// import "./History.css"
+import "./History.css"
 
 
 const baseURL = "http://localhost:8000/amz_items/";
@@ -76,6 +76,9 @@ const History = () => {
 
 		var histChart = new Chart(charts,{
 			type:"line",
+			options: {
+				aspectRation: 1,
+			},
 			data: {
 				labels:timestamp,
 				datasets:[{
@@ -86,6 +89,10 @@ const History = () => {
 				}]
 			}
 		})
+		
+		// hide function to automatically hide line
+		// (for later use when we want to show multiple datasets)
+		// histChart.hide(0);
 	}
 
 	return (
@@ -94,12 +101,7 @@ const History = () => {
 				Enter ASIN: <input value={asin} onChange={e => setASIN(e.target.value)} />
 			</label>
 			<button onClick={getTimeSeries}> Show History</button>
-			<div>
-				{/* {data}
-				{timestamp}
-				{price} */}
-			</div>
-			<div>
+			<div id="chart-space">
 				<canvas id="charts" width="200" height="200"></canvas>
 			</div>
 
