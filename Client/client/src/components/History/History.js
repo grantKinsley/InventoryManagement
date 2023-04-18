@@ -10,13 +10,13 @@ import { element } from "prop-types";
 
 
 const baseURL = "http://localhost:8000/amz_items/";
-const accessToken = sessionStorage.getItem("serverToken");
+
 const History = () => {
 	const [data, setData] = useState(0);
 	const [timestamp, setTimestamp] = useState(0)	// x axis
 	const [price, setPrice] = useState(0)			// y axis
 	const [asin, setASIN] = useState(0)
-
+	const accessToken = sessionStorage.getItem("serverToken");
 	if (sessionStorage.getItem("serverToken") === null) {
 		return <Navigate to="/login" />;
 	}

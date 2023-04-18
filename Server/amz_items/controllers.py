@@ -112,6 +112,6 @@ def getTimeSeries(asin, token):
     # items  = list(priceTimeSeries.find({"metadata": {"ASIN" : asin,"companyId": ObjectId(token.get("companyId"))}}))
     # items  = list(priceTimeSeries.find({$and:[{"metadata.ASIN": asin}, {"metadata.ASIN": asin}]}))
     items = list(priceTimeSeries.find({"metadata.ASIN": 
-        asin, "metadata.companyID": ObjectId(token.get("companyId"))}))
+        str(asin), "metadata.companyID": ObjectId(token.get("companyId"))}))
     return JsonResponse(dumps(items), safe=False)
 

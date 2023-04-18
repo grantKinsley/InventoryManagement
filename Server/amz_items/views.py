@@ -116,7 +116,7 @@ def downloadCSV(lis):
 @csrf_exempt
 @middleware.authentication_required
 def price_history(request,asin):
-    
+    print("MADE IT HERE")
     token = request.META.get("decoded_token")
     return controllers.getTimeSeries(asin,token)
 
