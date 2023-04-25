@@ -4,12 +4,13 @@ import React from "react";
 import axios from "axios";
 import AuthContext from "../../context-Api/AuthProvider";
 import Table from "./Table.js"
-import { useTable } from "react-table";
 import { Navigate } from "react-router-dom";
 import loading from "../../resources/loading.gif"
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
-import Tab from "@mui/material/Tab"
-import Tabs from "@mui/material/Tabs"
+// import Tab from "@mui/material/Tab"
+// import Tabs from "@mui/material/Tabs"
 
 var fileDownload = require("js-file-download");
 
@@ -18,6 +19,7 @@ const baseURL = "http://localhost:8000/amz_items/";
 export default function RecordList() {
   const [records, setRecords] = useState([]);
   const [fetched, setFetched] = useState(false);
+  const [date, setDate] = useState(new Date());
   const { auth } = useContext(AuthContext);
 
   // ----------------------------------
@@ -46,6 +48,10 @@ export default function RecordList() {
       {
         Header: 'Model',
         accessor: 'Product Title', // accessor is the "key" in the data
+      },
+      {
+        Header: 'Selling Price',
+        accessor: 'Sellable On Hand Units', 
       },
       {
         Header: 'Sellable Inventory',
@@ -83,7 +89,8 @@ export default function RecordList() {
   // This following section will display the table with the records of individuals.
   if (fetched) {
     return (
-        <div>
+        <div> 
+          <DatePicker selected={date} onChange={(date) => setDate(date)} />
           {Holdon(columns)}
         </div>
     );

@@ -1,0 +1,30 @@
+.catalog-container {
+    background-color: white;
+    width: 100%;
+    margin: 20px;
+}
+
+.search-bar {
+    margin: 0px;
+}
+
+.scrollable-container {
+    overflow-y: auto;
+    width: 100%;
+    margin-top: 10px;
+    max-height: 800px;
+}
+
+.card-info-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-self: center;
+    width: 100%;
+}
+
+.top-elements {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+}

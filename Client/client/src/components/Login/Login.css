@@ -1,4 +1,5 @@
 .login-wrapper {
+    background-color: white;
     margin: auto;
     padding: 0px 25px 25px 25px;
     width: 200px;
@@ -7,10 +8,16 @@
 }
 
 .full-page-container {
+    background-color: rgb(10, 25, 41);
+    margin:-25px;
     height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+.login-title {
+    text-align:center;
 }
 
 button {

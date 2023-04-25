@@ -29,6 +29,7 @@ const Login = () => {
       );
       const token = response?.data?.token;
       sessionStorage.setItem("serverToken", token); // store token locally
+      sessionStorage.setItem("username", usr)
       console.log(token);
       if (token) {
         setAuth({ usr, token });
@@ -50,7 +51,7 @@ const Login = () => {
     <div className="full-page-container">
       <div className="header" style={{ height: 100 }}></div>
       <div className="login-wrapper">
-        <h1>Please Log In</h1>
+        <h1 className="login-title">Welcome</h1>
         <form onSubmit={handleSubmit}>
           <label>
             <p>Username</p>

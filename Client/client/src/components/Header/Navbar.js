@@ -1,18 +1,60 @@
 // import React from 'react';
+import { useState, useContext, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import "./Navbar.css";
+import styles from "./Navbar.module.css";
+import { navData } from "../../navData";
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { NavLink } from "react-router-dom"
+
 
 const Navbar = () => {
   const location = useLocation();
+  const [open, setopen] = useState(true)
 
   if (location.pathname === "/login" || location.pathname === "/register")
     return null;
 
+  const toggleOpen = () => {
+    setopen(!open)
+  }
+
   const logout = () => {
-    sessionStorage.removeItem("serverToken"); // store token locally
+    sessionStorage.removeItem("serverToken"); // remove token locally to logout
   };
+
   return (
+    <div className={open ? styles.sidenav : styles.sidenavClosed}>
+      <button className={styles.menuBtn} onClick={toggleOpen}>
+        {open ? <KeyboardDoubleArrowLeftIcon /> : <KeyboardDoubleArrowRightIcon />}
+      </button>
+      {navData.map(item => {
+        return <NavLink key={item.id} className={styles.sideitem} to={item.link}>
+          {item.icon}
+          <span className={open ? styles.linkText : styles.linkTextClosed}>{item.text}</span>
+        </NavLink>
+      })}
+      <NavLink className={styles.sideitem} onClick={logout} to="/login">
+        <LogoutIcon />
+        <span className={open ? styles.linkText : styles.linkTextClosed}>Logout</span>
+      </NavLink>
+      {/*
+      <div className={styles.userbox}>
+        <AccountCircleIcon />
+        <span className={open ? styles.linkText : styles.linkTextClosed}>test</span>
+        <NavLink className={styles.sideitem} onClick={logout} to="/login">
+          <LogoutIcon />
+        </NavLink>
+        
+      </div>
+    */}
+    </div>
+
+    /** 
     <div className="left">
+      
       <ul className="nav">
         <li>
           <Link to="/">Dashboard</Link>
@@ -36,6 +78,7 @@ const Navbar = () => {
         </li>
       </ul>
     </div>
+    **/
   );
 };
 

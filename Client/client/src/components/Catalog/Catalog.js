@@ -4,6 +4,18 @@ import AuthContext from "../../context-Api/AuthProvider";
 import { Navigate } from "react-router-dom";
 import "./Catalog.css";
 import placeholderImg from "./logo192.png";
+import Tooltip from "@mui/material/Tooltip"
+import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
+import SearchIcon from "@mui/icons-material/Search";
+import TextField from "@mui/material/TextField";
+import DownloadIcon from '@mui/icons-material/Download';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 var fileDownload = require("js-file-download");
 
@@ -29,7 +41,7 @@ const Card = (props) => {
         margin: 10,
         border: "solid",
         borderRadius: 5,
-        maxWidth: 350,
+        maxWidth: 1000,
       }}
     >
       <div className="card-info-container">
@@ -47,7 +59,27 @@ const Card = (props) => {
   );
 };
 
+const SearchBar = ({ setSearchQuery }) => (
+  <form className="search-bar">
+    <TextField
+      id="search-bar"
+      className="text"
+      label="Enter an ASIN"
+      variant="outlined"
+      placeholder="Search..."
+      size="small"
+    />
+    <IconButton type="submit" aria-label="search">
+      <SearchIcon style={{ fill: "blue" }} />
+    </IconButton>
+  </form>
+);
+
+
 const Catalog = () => {
+  const [openAdd, setAddOpen] = useState(false);
+  const [openDelete, setDeleteOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [asin, setAsin] = useState("");
   const [model, setModel] = useState("");
   const [fetched, setFetched] = useState(false);
@@ -75,7 +107,7 @@ const Catalog = () => {
     const response = await axios
       .get(reportURL, {
         responseType: "blob",
-        headers:{
+        headers: {
           Bearer: accessToken,
         }
       })
@@ -111,13 +143,30 @@ const Catalog = () => {
     fetchOne().catch(console.error);
   };
 
+  const handleDeleteClickOpen = () => {
+    setDeleteOpen(true);
+  }
+
+  const handleDeleteClose = () => {
+    setDeleteOpen(false);
+  };
+
+  const handleAddClickOpen = () => {
+    setAddOpen(true);
+  }
+
+  const handleAddClose = () => {
+    setAddOpen(false);
+  };
+
   if (sessionStorage.getItem("serverToken") === null) {
     return <Navigate to="/login" />;
   }
 
   if (fetched) {
     return (
-      <div>
+      <div className="catalog-container">
+        {/*
         <form>
           <label>
             Search by Asin:
@@ -131,8 +180,56 @@ const Catalog = () => {
           </label>
           <button onClick={handleGetOne}>Search</button>
         </form>
-        <button onClick={downloadCSV}>Download CSV</button>
-        <button onClick={deleteCompanyData}>Delete Company Data</button>
+            */}
+        <div className="top-elements">
+          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <Tooltip title="Download CSV">
+            <IconButton onClick={downloadCSV}>
+              <DownloadIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete all data">
+            <IconButton onClick={handleDeleteClickOpen}>
+              <DeleteForeverIcon />
+            </IconButton>
+          </Tooltip>
+          <Dialog
+            open={openDelete}
+            onClose={handleDeleteClose}
+            aria-labelledby="alert-dialog-title"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Are you sure you want to delete all company data?"}
+            </DialogTitle>
+            <DialogActions>
+              <Button onClick={deleteCompanyData}>Delete data.</Button>
+              <Button onClick={handleDeleteClose} autoFocus>
+                No, take me back.
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+        <Button variant="contained" onClick={handleAddClickOpen}> Add product + </Button>
+
+        <Dialog open={openAdd} onClose={handleAddClose}>
+          <DialogTitle>Add New Product</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Test.
+            </DialogContentText>
+            <TextField
+              required
+              autoFocus
+              id="name"
+              label="ASIN"
+              variant="standard"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleAddClose}>Cancel</Button>
+            <Button onClick={handleAddClose}>Add</Button>
+          </DialogActions>
+        </Dialog>
 
         <div className="scrollable-container">
           {data.map((datum) => {

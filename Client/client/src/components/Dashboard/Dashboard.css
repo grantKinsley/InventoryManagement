@@ -11,19 +11,22 @@ h4 {
     color: red;
 }
 
-/* .container {
+.container {
     background-color: rgb(212, 201, 201);
-} */
+}
 
 .card {
     background-color: white;
-    width: 400px;
+    border: 1px solid #ddd;
+    border-radius: 1px;
+    width: 300px;
     height: 400px;
     padding: 0px 50px 5px 50px;
-    margin: 5px;
+    margin: 10px;
 }
 
 .card-container {
     display: flex;
+    background-color: #F5F5F5;
     flex-direction: column;
 }
