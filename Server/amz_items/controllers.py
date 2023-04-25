@@ -98,3 +98,9 @@ def get_list():
 def get_list_search(token):
     items = list(amz_items.find({"companyId": ObjectId(token.get("companyId"))}))
     return items
+
+def getTimeSeries(asin,token):
+    #items  = list(priceTimeSeries.find({"metadata": {"ASIN" : asin,"companyId": ObjectId(token.get("companyId"))}}))
+    #items  = list(priceTimeSeries.find({$and:[{"metadata.ASIN": asin}, {"metadata.ASIN": asin}]}))
+    items  = list(priceTimeSeries.find({"metadata.ASIN": int(asin), "metadata.companyID":ObjectId(token.get("companyId"))}))
+    return JsonResponse(dumps(items), safe=False)

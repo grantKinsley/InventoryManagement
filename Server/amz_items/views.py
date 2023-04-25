@@ -112,3 +112,11 @@ def downloadCSV(lis):
         return response
     except Exception as err:
         return JsonResponse({"Error 404": f"{err}"})
+
+@csrf_exempt
+@middleware.authentication_required
+def price_history(request,asin):
+    
+    token = request.META.get("decoded_token")
+    return controllers.getTimeSeries(asin,token)
+
