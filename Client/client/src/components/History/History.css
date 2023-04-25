@@ -1,8 +1,9 @@
-.container {
+/* .container {
     margin-left: 200px;
-}
+} */
 
 #chart-space {
-    max-width: 50%;
+    max-width: 75%;
+    max-height: 85vh;;
     margin-top: 10px;
 }
