@@ -51,7 +51,7 @@ export default function RecordList() {
       },
       {
         Header: 'Selling Price',
-        accessor: 'Sellable On Hand Units', 
+        accessor: 'test', 
       },
       {
         Header: 'Sellable Inventory',
@@ -94,24 +94,5 @@ export default function RecordList() {
           {Holdon(columns)}
         </div>
     );
-    /**
-    return (
-        <div>
-          <h3>Record List</h3>
-          <table className="table table-striped" style={{ marginTop: 20 }}>
-            <thead>
-              <tr>
-                <th>ASIN</th>
-                <th>Product Title</th>
-                <th>Selling Price</th>
-                <th>Cost</th>
-                <th>Inventory</th>
-              </tr>
-            </thead>
-            <tbody>{recordList()}</tbody>
-          </table>
-        </div>
-      );
-      */
   }
 }

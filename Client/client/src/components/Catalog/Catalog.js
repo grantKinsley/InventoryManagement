@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useMemo } from "react";
 import axios from "axios";
 import AuthContext from "../../context-Api/AuthProvider";
 import { Navigate } from "react-router-dom";
@@ -16,49 +16,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import EnhancedTable from './EnhancedTable';
 
 var fileDownload = require("js-file-download");
 
 const baseURL = "http://localhost:8000/amz_items/";
 
-const Card = (props) => {
-  // return (
-  //   <div style={{ padding: 10 }}>
-  //     {Object.keys(props.item).map((key) => (
-  //       <div key={key}>
-  //         {key !== "_id" && key !== "companyId"
-  //           ? key + ": " + String(props.item[key])
-  //           : ""}
-  //       </div>
-  //     ))}
-  //   </div>
-  // );
-  // console.log(props.item)
-  return (
-    <div
-      style={{
-        padding: 10,
-        margin: 10,
-        border: "solid",
-        borderRadius: 5,
-        maxWidth: 1000,
-      }}
-    >
-      <div className="card-info-container">
-        <img src={placeholderImg} style={{ maxWidth: 50 }} />
-        <div>
-          <div style={{ fontSize: 20 }}>
-            <b>{props.item["Product Title"]}</b>
-          </div>
-          <div>ASIN: {props.item.ASIN}</div>
-        </div>
-        <div>{props.item["Sellable On Hand Units"]}</div>
-        {/* <div>Sales</div> */}
-      </div>
-    </div>
-  );
-};
-
+/** 
 const SearchBar = ({ setSearchQuery }) => (
   <form className="search-bar">
     <TextField
@@ -73,8 +37,7 @@ const SearchBar = ({ setSearchQuery }) => (
       <SearchIcon style={{ fill: "blue" }} />
     </IconButton>
   </form>
-);
-
+);*/
 
 const Catalog = () => {
   const [openAdd, setAddOpen] = useState(false);
@@ -85,6 +48,7 @@ const Catalog = () => {
   const [fetched, setFetched] = useState(false);
   const [data, setData] = useState([]);
   const { auth } = useContext(AuthContext);
+  const [skipPageReset, setSkipPageReset] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,24 +65,23 @@ const Catalog = () => {
     fetchData().catch(console.error);
   }, []);
 
-  const downloadCSV = async (e) => {
-    const accessToken = sessionStorage.getItem("serverToken");
-    const reportURL = baseURL + "report";
-    const response = await axios
-      .get(reportURL, {
-        responseType: "blob",
-        headers: {
-          Bearer: accessToken,
-        }
-      })
-      .then((res) => {
-        fileDownload(res.data, "fileName.CSV");
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const columns = useMemo(
+    () => [
+      {
+        Header: "ASIN",
+        accessor: "ASIN",
+      },
+      {
+        Header: 'Model',
+        accessor: 'Product Title',
+      },
+      {
+        Header: 'Selling Price',
+        accessor: 'sellingPrice',
+      },
+    ],
+    []
+  )
 
   const deleteCompanyData = async (e) => {
     const accessToken = sessionStorage.getItem("serverToken");
@@ -159,6 +122,28 @@ const Catalog = () => {
     setAddOpen(false);
   };
 
+  // We need to keep the table from resetting the pageIndex when we
+  // Update data. So we can keep track of that flag with a ref.
+
+  // When our cell renderer calls updateMyData, we'll use
+  // the rowIndex, columnId and new value to update the
+  // original data
+  const updateMyData = (rowIndex, columnId, value) => {
+    // We also turn on the flag to not reset the page
+    setSkipPageReset(true)
+    setData(old =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...old[rowIndex],
+            [columnId]: value,
+          }
+        }
+        return row
+      })
+    )
+  }
+
   if (sessionStorage.getItem("serverToken") === null) {
     return <Navigate to="/login" />;
   }
@@ -181,60 +166,14 @@ const Catalog = () => {
           <button onClick={handleGetOne}>Search</button>
         </form>
             */}
-        <div className="top-elements">
-          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          <Tooltip title="Download CSV">
-            <IconButton onClick={downloadCSV}>
-              <DownloadIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Delete all data">
-            <IconButton onClick={handleDeleteClickOpen}>
-              <DeleteForeverIcon />
-            </IconButton>
-          </Tooltip>
-          <Dialog
-            open={openDelete}
-            onClose={handleDeleteClose}
-            aria-labelledby="alert-dialog-title"
-          >
-            <DialogTitle id="alert-dialog-title">
-              {"Are you sure you want to delete all company data?"}
-            </DialogTitle>
-            <DialogActions>
-              <Button onClick={deleteCompanyData}>Delete data.</Button>
-              <Button onClick={handleDeleteClose} autoFocus>
-                No, take me back.
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-        <Button variant="contained" onClick={handleAddClickOpen}> Add product + </Button>
-
-        <Dialog open={openAdd} onClose={handleAddClose}>
-          <DialogTitle>Add New Product</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Test.
-            </DialogContentText>
-            <TextField
-              required
-              autoFocus
-              id="name"
-              label="ASIN"
-              variant="standard"
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleAddClose}>Cancel</Button>
-            <Button onClick={handleAddClose}>Add</Button>
-          </DialogActions>
-        </Dialog>
-
-        <div className="scrollable-container">
-          {data.map((datum) => {
-            return <Card item={datum} key={datum.ASIN} />;
-          })}
+        <div className="table-container">
+          <EnhancedTable
+            columns={columns}
+            data={data}
+            setData={setData}
+            updateMyData={updateMyData}
+            skipPageReset={skipPageReset}
+          />
         </div>
       </div>
     );

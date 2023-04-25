@@ -4,6 +4,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import HistoryIcon from '@mui/icons-material/History';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 
 export const navData = [
     {
@@ -32,12 +33,18 @@ export const navData = [
     },
     {
         id: 4,
+        icon: <SummarizeIcon />,
+        text: "Reporting",
+        link: "/report"
+    },
+    {
+        id: 5,
         icon: <FileUploadIcon />,
         text: "Upload",
         link: "/upload"
     },
     {
-        id: 5,
+        id: 6,
         icon: <SettingsIcon />,
         text: "Settings",
         link: "/settings"

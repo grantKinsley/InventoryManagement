@@ -6,25 +6,27 @@ import Chart from 'chart.js/auto';
 import { Line } from "react-chartjs-2";
 import { element } from "prop-types";
 
-// import "./History.css"
+import "./History.css"
 
 
 const baseURL = "http://localhost:8000/amz_items/";
+
 const History = () => {
 	const [data, setData] = useState(0);
 	const [timestamp, setTimestamp] = useState(0)	// x axis
 	const [price, setPrice] = useState(0)			// y axis
-
+	const [asin, setASIN] = useState(0)
+	const accessToken = sessionStorage.getItem("serverToken");
 	if (sessionStorage.getItem("serverToken") === null) {
 		return <Navigate to="/login" />;
 	}
 
 	var tempASIN = "9876543210"
-	
+	tempASIN = 'ASINTEST11'
 	const getTimeSeries = async () => {
-		const accessToken = sessionStorage.getItem("serverToken");
+		
 		//response should be a list of dictionaries
-		const response = await axios.get(baseURL + "hist/"+tempASIN,{headers: { "Content-Type": "application/json", Bearer: accessToken },});
+		const response = await axios.get(baseURL + "hist/"+asin,{headers: { "Content-Type": "application/json", Bearer: accessToken },});
 		console.log(response);
 		//response needs to be sorted based on the timestamp
 		//response.sort(function(a,b){return new Date(a.timestamp) - new Date(b.timestamp)});
@@ -64,15 +66,19 @@ const History = () => {
 		setTimestamp(timestamp)
 		setPrice(price)
 		// setData(tuples);
-		const LineChart = () => {
-			<div>
-				<Line data={data} />
-			</div>
-		}
-		
+
 		const charts = document.getElementById("charts");
-		new Chart(charts,{
+
+		let chartExists = Chart.getChart("charts");
+		if(chartExists != undefined){
+			chartExists.destroy();
+		}
+
+		var histChart = new Chart(charts,{
 			type:"line",
+			options: {
+				aspectRation: 1,
+			},
 			data: {
 				labels:timestamp,
 				datasets:[{
@@ -83,17 +89,19 @@ const History = () => {
 				}]
 			}
 		})
+		
+		// hide function to automatically hide line
+		// (for later use when we want to show multiple datasets)
+		// histChart.hide(0);
 	}
 
 	return (
 		<div className="container">
-			<button onClick={getTimeSeries}>Test Time Series</button>
-			<div>
-				{/* {data}
-				{timestamp}
-				{price} */}
-			</div>
-			<div>
+			<label>
+				Enter ASIN: <input value={asin} onChange={e => setASIN(e.target.value)} />
+			</label>
+			<button onClick={getTimeSeries}> Show History</button>
+			<div id="chart-space">
 				<canvas id="charts" width="200" height="200"></canvas>
 			</div>
 

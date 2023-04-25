@@ -8,6 +8,8 @@
 .sidenavClosed {
     /* composes: sidenav; */
     transition: width 0.3s ease-in-out;
+    background-color: rgb(10, 25, 41);
+    height: 100vh;
     width: 60px
 }
 
