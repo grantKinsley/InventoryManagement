@@ -84,8 +84,8 @@ def delete_item(asin, token):
     print("HERE")
     item = amz_items.find_one({"ASIN": asin})
     print(item, token.get("companyId"))
-    assert (str(item["companyId"]) == token.get("companyId"))
-    amz_items.delete_one({"ASIN": asin})
+    #assert (str(item["companyId"]) == token.get("companyId"))
+    amz_items.delete_one({"ASIN": asin, "companyId": ObjectId(token.get("companyId"))})
     return JsonResponse({"Success": f"Document with asin {asin} deleted"})
 
 

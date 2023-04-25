@@ -166,6 +166,7 @@ const Catalog = () => {
           <button onClick={handleGetOne}>Search</button>
         </form>
             */}
+
         <div className="table-container">
           <EnhancedTable
             columns={columns}

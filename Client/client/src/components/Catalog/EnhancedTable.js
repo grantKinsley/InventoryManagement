@@ -20,6 +20,9 @@ import {
   useSortBy,
   useTable,
 } from 'react-table'
+import axios from "axios";
+
+const baseURL = "http://localhost:8000/amz_items/";
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -171,12 +174,30 @@ const EnhancedTable = ({
   const removeByIndexs = (array, indexs) =>
     array.filter((_, i) => !indexs.includes(i))
 
-  const deleteProductHandler = event => {
+  const deleteProductHandler = async(e) => {
     const newData = removeByIndexs(
       data,
       Object.keys(selectedRowIds).map(x => parseInt(x, 10))
     )
+
+    console.log(data[Object.keys(selectedRowIds).map(x => parseInt(x, 10))[0]].ASIN)
+    const accessToken = sessionStorage.getItem("serverToken");
+    // const response = axios.delete(baseURL+data[Object.keys(selectedRowIds).map(x => parseInt(x, 10))[0]].ASIN, {
+    //   headers: { "Content-Type": "application/json", Bearer: accessToken },
+    // });
+    for(var i = 0; i < Object.keys(selectedRowIds).map(x => parseInt(x, 10)).length; i++){
+      const response = axios.delete(String(baseURL+data[Object.keys(selectedRowIds).map(x => parseInt(x, 10))[i]].ASIN), {
+        headers: { "Content-Type": "application/json", Bearer: accessToken },
+      });
+    }
+
     setData(newData)
+
+    // const accessToken = sessionStorage.getItem("serverToken");
+    // const response = await axios.delete(baseURL+"ASIN", {
+    //   headers: { "Content-Type": "application/json", Bearer: accessToken },
+    // });
+    //console.log(response);
   }
 
   const addProductHandler = user => {

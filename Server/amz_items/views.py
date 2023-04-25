@@ -120,3 +120,6 @@ def price_history(request,asin):
     token = request.META.get("decoded_token")
     return controllers.getTimeSeries(asin,token)
 
+def delete_one(request,asin):
+    token = request.META.get("decoded_token")
+    return controllers.delete_item(asin, token)
