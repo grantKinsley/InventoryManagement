@@ -201,7 +201,14 @@ const EnhancedTable = ({
   }
 
   const addProductHandler = user => {
+    const accessToken = sessionStorage.getItem("serverToken");
+
     const newData = data.concat([user])
+    //[user]['sellingPrice'] = parseInt([user]['sellingPrice'])
+    console.log([user])
+    axios.post(baseURL,[user], {
+      headers: { "Content-Type": "application/json", Bearer: accessToken },
+    })
     setData(newData)
   }
 

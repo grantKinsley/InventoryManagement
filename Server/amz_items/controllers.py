@@ -41,15 +41,21 @@ def delete_all(token):
 
 
 def create_item(body, token):
+    print(body)
     upsert_operations = []
     time_series_operations = []
     failed_documents = []
     # For loop expects body to be a list of dictionaries. dict key values are csv column names
     curTime = datetime.datetime.now()
     for item in body:
-        print(item)
+        
         item["companyId"] = ObjectId(token.get("companyId"))
-
+        item["sellingPrice"] = (float)(item["sellingPrice"])
+        item["cost"] = (float)(item["cost"])
+        if(item["asin"]):
+            item["ASIN"] = item["asin"]
+            del item["asin"]
+        print(item)
         try:
             # priceTimeSeries.insert_one({
             #     'metadata': {'ASIN': item["ASIN"], 'companyID': ObjectId(token.get('companyId'))},
