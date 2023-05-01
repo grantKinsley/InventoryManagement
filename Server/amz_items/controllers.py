@@ -27,7 +27,7 @@ def get_items(token):
 
 
 def get_item(asin, token):
-    item = amz_items.find_one({"ASIN": asin})
+    item = amz_items.find_one({"ASIN": asin, 'companyId': ObjectId(token.get('companyId'))})
     assert (str(item["companyId"]) == token.get("companyId"))
     item = dumps(item)
     return JsonResponse(item, safe=False)
@@ -62,11 +62,15 @@ def create_item(body, token):
             if "" in item:
                 item.pop("")
             upsert_operations.append(
-                UpdateOne({"ASIN": item["ASIN"]}, {"$set": item}, upsert=True))
+                UpdateOne({"ASIN": item["ASIN"], 'companyId': ObjectId(token.get('companyId'))}, {"$set": item}, upsert=True))
+            old_item = amz_items.find_one({"ASIN": item["ASIN"], 'companyId': ObjectId(token.get('companyId'))})
+            if old_item:
+                old_item.update(item)
+                item = old_item
             item['metadata'] = {'ASIN': str(item["ASIN"]),
-                                'companyID': ObjectId(token.get('companyId'))}
+                                'companyId': ObjectId(token.get('companyId'))}
             item['timestamp'] = curTime
-            item['price'] = 25 if 'sellingPrice' not in item else item['sellingPrice']
+            item['price'] = 25 if 'sellingPrice' not in item and 'price' not in item else item['sellingPrice']
             time_series_operations.append(
                 InsertOne(item)
             )
@@ -91,10 +95,10 @@ def delete_item(asin, token):
 
 
 def patch_item(asin, new_params, token):
-    item = amz_items.find_one({"ASIN": asin})
+    item = amz_items.find_one({"ASIN": asin, 'companyId': ObjectId(token.get('companyId'))})
     assert (str(item["companyId"]) == token.get("companyId"))
     amz_items.update_one(
-        {"ASIN": asin}, {"$set": new_params})
+        {"ASIN": asin, 'companyId': ObjectId(token.get('companyId'))}, {"$set": new_params})
     return JsonResponse({"Success": f"Document with asin {asin} updated"})
 
 
