@@ -36,6 +36,7 @@ def get_item(asin, token):
 def delete_all(token):
     companyId = ObjectId(token.get("companyId"))
     amz_items.delete_many({"companyId": companyId})
+    priceTimeSeries.delete_many({"companyId":companyId})
     return JsonResponse("Deleted all company documents", safe=False)
 
 
