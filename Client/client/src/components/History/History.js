@@ -14,10 +14,8 @@ const baseURL = "http://localhost:8000/amz_items/";
 const History = () => {
 	// const [data, setData] = useState(0);
 	const [timestamp, setTimestamp] = useState(0)			 // x axis
-	const [price, setPrice] = useState(0)					 // y axis
-	const [orderedUnits, setOrderedUnits] = useState(0); 	 // || 
-	const [shippedUnits, setShippedUnits] = useState(0); 	 // || 
-	const [returns, setReturns]	= useState(0);				 // ||
+	const [datapoints, setDatapoints] = useState({});		 // y axis
+	
 	const [asin, setASIN] = useState(0);
 	const accessToken = sessionStorage.getItem("serverToken");
 	if (sessionStorage.getItem("serverToken") === null) {
@@ -30,7 +28,7 @@ const History = () => {
 		
 		//response should be a list of dictionaries
 		const response = await axios.get(baseURL + "hist/"+asin,{headers: { "Content-Type": "application/json", Bearer: accessToken },});
-		console.log(response);
+		// console.log(response);
 		//response needs to be sorted based on the timestamp
 		//response.sort(function(a,b){return new Date(a.timestamp) - new Date(b.timestamp)});
 		//put the sorted times into xAxis
@@ -74,13 +72,17 @@ const History = () => {
 			shippedUnits.push(element['shippedUnits']);
 			returns.push(element['returns']);
 		})
-		// console.log(timestamp)
+		console.log(timestamp)
 		// console.log(price)
+		
 		setTimestamp(timestamp);
-		setPrice(price);
-		setOrderedUnits(orderedUnits);
-		setShippedUnits(shippedUnits);
-		setReturns(returns);
+		setDatapoints({
+			"price":price, 
+			"orderedUnits":orderedUnits, 
+			"shippedUnits":shippedUnits, 
+			"returns":returns
+		});
+		console.log("data:", datapoints)
 
 		const charts = document.getElementById("charts");
 
@@ -89,34 +91,34 @@ const History = () => {
 			chartExists.destroy();
 		}
 
-		var histChart = new Chart(charts,{
+		const histChart = new Chart(charts,{
 			type:"line",
 			options: {
-				aspectRation: 1,
+				aspectRatio: 1,
 			},
 			data: {
 				labels: timestamp,
 				datasets: [
 					{
 						label: "Price",
-						data: price,
+						data: datapoints['price'],
 						fill: false,
 					},
 					{
 						label: "Ordered Units",
-						data: orderedUnits,
+						data: datapoints['orderedUnits'],
 						fill: false,
 						hidden: true,
 					},
 					{
 						label: "Shipped Units",
-						data: shippedUnits,
+						data: datapoints['shippedUnits'],
 						fill: false,
 						hidden: true,
 					},
 					{
 						label: "Customer Returns",
-						data: returns,
+						data: datapoints['returns'],
 						fill: false,
 						hidden: true,
 					},
@@ -124,6 +126,67 @@ const History = () => {
 				]
 			}
 		})
+
+		
+	}
+
+	function filterDate() {
+		const start = Date.parse(document.getElementById('startDate').value);
+		const end = Date.parse(document.getElementById('endDate').value);
+
+		// console.log(start)
+		// console.log(end)
+
+		const dates = timestamp.map(ts => Date.parse(ts));
+		// console.log(dates)
+
+		var startInd = 0;
+		while (start && startInd < dates.length) {
+			if (start < dates[startInd]) {
+				break;
+			}
+			startInd++;
+		}
+
+		var endInd = dates.length-1;
+		while (end && endInd > 0) {
+			if (end > dates[endInd]) {
+				break;
+			}
+			endInd--;
+		}
+
+		// console.log(startInd, endInd);
+
+		const filterTimestamps = timestamp.slice(startInd, endInd+1);
+		// console.log(filterTimestamps);
+
+		let histChart = Chart.getChart("charts");
+
+		let dataInd = 0;
+		for (const dataset in datapoints) {
+			// console.log(datapoints[dataset])
+			const filterDataset = datapoints[dataset].slice(startInd, endInd+1);
+			histChart.data.datasets[dataInd].data = filterDataset;
+			dataInd++;
+			// console.log(filterDataset)
+		}
+		histChart.data.labels = filterTimestamps;
+		histChart.update('none');
+	}
+
+	function resetFilter() {
+		let histChart = Chart.getChart("charts");
+		histChart.data.labels = timestamp;
+		let dataInd = 0;
+		for (const dataset in datapoints) {
+			// console.log(datapoints[dataset])
+			histChart.data.datasets[dataInd].data = datapoints[dataset];
+			dataInd++;
+			// console.log(filterDataset)
+		}
+
+		histChart.update('none')
 	}
 
 	return (
@@ -131,8 +194,12 @@ const History = () => {
 			<label>
 				Enter ASIN: <input value={asin} onChange={e => setASIN(e.target.value)} />
 			</label>
-			<button onClick={getTimeSeries}> Show History</button>
+			<button onClick={getTimeSeries}>Show History</button>
 			<div id="chart-space">
+				Start: <input type="date" id="startDate"/> End: <input type="date" id="endDate"/>
+				<button onClick={filterDate}>Filter</button>
+				<button onClick={resetFilter}>Reset</button>
+
 				<canvas id="charts" width="200" height="200"></canvas>
 			</div>
 
