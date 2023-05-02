@@ -6,7 +6,7 @@ client = MongoClient(
 db = client["inventory-cluster"]
 
 amz_items = db.amz_items
-
+companies = db.companies
 priceTimeSeries = db.priceTimeSeries
 
 def find_one(key, value):
@@ -16,8 +16,7 @@ def find_all():
     return list(amz_items.find({}))
 
 def findMostRecent():
-    mostRecentObj = priceTimeSeries.find_one({"metadata.ASIN":"ASINTEST69"},sort=[("timestamp",-1)])
-    print(mostRecentObj)
+    companies.delete_many({"name": "ethan2"})
     return
     if not mostRecentObj:
         return None
