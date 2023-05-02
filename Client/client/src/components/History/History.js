@@ -5,6 +5,8 @@ import { Navigate } from "react-router-dom";
 import Chart from 'chart.js/auto';
 import { Line } from "react-chartjs-2";
 import { element } from "prop-types";
+import Autocomplete from '@mui/material/Autocomplete';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import "./History.css"
 
@@ -17,13 +19,12 @@ const History = () => {
 	const [datapoints, setDatapoints] = useState({});		 // y axis
 	
 	const [asin, setASIN] = useState(0);
+	const [options, setOptions] = useState(null);
 	const accessToken = sessionStorage.getItem("serverToken");
 	if (sessionStorage.getItem("serverToken") === null) {
 		return <Navigate to="/login" />;
 	}
 
-	var tempASIN = "9876543210"
-	tempASIN = 'ASINTEST11'
 	const getTimeSeries = async () => {
 		
 		//response should be a list of dictionaries
@@ -49,10 +50,10 @@ const History = () => {
 		result.forEach(element => {
 			tuples.push({
 				'timestamp': element['timestamp']['$date'], 
-				'price': element['price'],
+				'sellingPrice': element['sellingPrice'],
+				'cost': element['price'],
 				'orderedUnits': element['Ordered Units'],
-				'shippedUnits': element['Shipped Units'],
-				'returns': element['Customer Returns'],
+				'inventory': element['Sellable On Hand Units'],
 			})
 		});
 		// console.log(tuples)
@@ -61,26 +62,26 @@ const History = () => {
 		});
 		// console.log(tuples)
 		const timestamp = [];
-		const price = [];
+		const sellingPrice = [];
+		const cost = [];
 		const orderedUnits = [];
-		const shippedUnits = [];
-		const returns = [];
+		const inventory = [];
 		tuples.forEach(element => {
 			timestamp.push(element['timestamp']);
-			price.push(element['price']);
+			sellingPrice.push(element['sellingPrice']);
+			cost.push(element['cost']);
 			orderedUnits.push(element['orderedUnits']);
-			shippedUnits.push(element['shippedUnits']);
-			returns.push(element['returns']);
+			inventory.push(element['inventory']);
 		})
 		console.log(timestamp)
 		// console.log(price)
 		
 		setTimestamp(timestamp);
 		setDatapoints({
-			"price":price, 
+			"sellingPrice":sellingPrice,
+			"cost":cost, 
 			"orderedUnits":orderedUnits, 
-			"shippedUnits":shippedUnits, 
-			"returns":returns
+			"inventory":inventory, 
 		});
 		console.log("data:", datapoints)
 
@@ -100,8 +101,13 @@ const History = () => {
 				labels: timestamp,
 				datasets: [
 					{
-						label: "Price",
-						data: datapoints['price'],
+						label: "Selling Price",
+						data: datapoints['sellingPrice'],
+						fill: false,
+					},
+					{
+						label: "Costs",
+						data: datapoints['cost'],
 						fill: false,
 					},
 					{
@@ -111,14 +117,8 @@ const History = () => {
 						hidden: true,
 					},
 					{
-						label: "Shipped Units",
-						data: datapoints['shippedUnits'],
-						fill: false,
-						hidden: true,
-					},
-					{
-						label: "Customer Returns",
-						data: datapoints['returns'],
+						label: "Inventory",
+						data: datapoints['inventory'],
 						fill: false,
 						hidden: true,
 					},

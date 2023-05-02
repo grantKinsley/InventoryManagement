@@ -1,0 +1,44 @@
+.card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 1px;
+    width: 300px;
+    height: 400px;
+    padding: 0px 50px 5px 50px;
+    margin: 10px;
+}
+
+.title {
+    text-align: center;
+    margin: 50px;
+    
+}
+
+.button-container {
+    margin: 200px;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 100px 100px;
+    gap: 10px;
+}
+
+span {
+    font-size: small;
+}
+
+.img-button {
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 150px;
+    height: 150px;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+    background-color: #F5F5F5;
+    flex-direction: column;
+}

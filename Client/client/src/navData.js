@@ -23,28 +23,22 @@ export const navData = [
         id: 2,
         icon: <BarChartIcon />,
         text: "Analysis",
-        link: "/data"
+        link: "/analysis"
     },
     {
         id: 3,
-        icon: <HistoryIcon />,
-        text: "History",
-        link: "/history"
-    },
-    {
-        id: 4,
         icon: <SummarizeIcon />,
         text: "Reporting",
         link: "/report"
     },
     {
-        id: 5,
+        id: 4,
         icon: <FileUploadIcon />,
-        text: "Upload",
+        text: "Import",
         link: "/upload"
     },
     {
-        id: 6,
+        id: 5,
         icon: <SettingsIcon />,
         text: "Settings",
         link: "/settings"

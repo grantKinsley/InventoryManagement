@@ -8,6 +8,7 @@ import { Navigate } from "react-router-dom";
 import loading from "../../resources/loading.gif"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
+import "./data.css"
 
 // import Tab from "@mui/material/Tab"
 // import Tabs from "@mui/material/Tabs"
@@ -16,7 +17,7 @@ var fileDownload = require("js-file-download");
 
 const baseURL = "http://localhost:8000/amz_items/";
 
-export default function RecordList() {
+export default function Data() {
   const [records, setRecords] = useState([]);
   const [fetched, setFetched] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -51,7 +52,11 @@ export default function RecordList() {
       },
       {
         Header: 'Selling Price',
-        accessor: 'test', 
+        accessor: 'sellingPrice', 
+      },
+      {
+        Header: 'Cost',
+        accessor: 'price',
       },
       {
         Header: 'Sellable Inventory',
@@ -62,12 +67,12 @@ export default function RecordList() {
         accessor: 'Open Purchase Order Quantity', 
       },
       {
-        Header: 'Sales this Week',
+        Header: 'Sales Qty (Week)',
         accessor: 'Ordered Units', 
       },
       {
-        Header: 'Weeks of Cover',
-        accessor: ''
+        Header: 'Revenue (Week)',
+        accessor: 'Ordered Revenue'
       },
     ],
     []
@@ -91,7 +96,9 @@ export default function RecordList() {
     return (
         <div> 
           <DatePicker selected={date} onChange={(date) => setDate(date)} />
-          {Holdon(columns)}
+          <div className="data-container">
+            {Holdon(columns)}
+          </div>
         </div>
     );
   }

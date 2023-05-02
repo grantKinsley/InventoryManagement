@@ -16,29 +16,29 @@ const Dashboard = () => {
 
 	return (
 		<div className="container">
-		<div className="card-container">
-			<div className="card">
+			<div className="card-container">
+				<div className="card">
 					<h2>Weekly Glance</h2>
-						<h4>Sales</h4>
-						<div className="green">$ {sales}</div>
+					<h4>Sales</h4>
+					<div className="green">$ {sales}</div>
 
-						<h4>Products Ordered</h4>
-						<div className="green">{ordered}</div>
+					<h4>Products Ordered</h4>
+					<div className="green">{ordered}</div>
 
-						<h4>Products Returned</h4>
-						<div className="red">{returned}</div>
+					<h4>Products Returned</h4>
+					<div className="red">{returned}</div>
 
-						<h4>Views</h4>
-						<div className="green">{views} views</div>
+					<h4>Views</h4>
+					<div className="green">{views} views</div>
 				</div>
 
 				<div className="card">
 					<h2>Hottest Items</h2>
 				</div>
+			</div>
+
 		</div>
-			
-		</div>
-		
+
 	)
 }
 
