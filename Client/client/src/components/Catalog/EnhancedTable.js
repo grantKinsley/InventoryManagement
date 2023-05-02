@@ -50,9 +50,9 @@ const inputStyle = {
 
 // Create an editable cell renderer
 const EditableCell = ({
-  value: initialValue,
-  row: { index },
-  column: { id },
+  value: initialValue,//before any changes
+  row: { index },//table row
+  column: { id },//column name
   updateMyData, // This is a custom function that we supplied to our table instance
 }) => {
   // We need to keep and update the state of the cell normally
@@ -60,11 +60,16 @@ const EditableCell = ({
 
   const onChange = e => {
     setValue(e.target.value)
+    console.log(initialValue)
+    //console.log(EnhancedTable.data)
   }
 
   // We'll only update the external data when the input is blurred
   const onBlur = () => {
     updateMyData(index, id, value)
+    //use the index to get the editable cell.
+    //send a post and make sure to get the ASIN and company ID
+    
   }
 
   // If the initialValue is changed externall, sync it up with our state
@@ -205,7 +210,7 @@ const EnhancedTable = ({
 
     const newData = data.concat([user])
     //[user]['sellingPrice'] = parseInt([user]['sellingPrice'])
-    console.log([user])
+    //console.log([user])
     axios.post(baseURL,[user], {
       headers: { "Content-Type": "application/json", Bearer: accessToken },
     })
