@@ -22,7 +22,7 @@ def genToken(username, companyId):
     expiration_date = datetime.datetime.now(
         tz=datetime.timezone.utc) + datetime.timedelta(hours=1)
     token = jwt.encode(
-        {"username": username, "companyId": companyId, "exp": expiration_date}, SECRET_KEY, algorithm="HS256")
+        {"username": username, "companyId": str(companyId), "exp": expiration_date}, SECRET_KEY, algorithm="HS256")
     return token
 
 
@@ -46,15 +46,20 @@ def login(request):
 
 def register(request):
     body = json.loads(request.body.decode('utf-8'))
-    companyId = body.get("companyId")
-    assert (companies.find_one({"_id": ObjectId(companyId)}))
+    username = body.get("username")
+    prevUser = auth.find_one({"username": username})
+    if prevUser:
+        return JsonResponse({"Error": f'User {body.get("username")} already exists.'}, status=409)
+    assert ("companyName" in body)
+    company = companies.insert_one({"name": body.get("companyName")})
     password = body.get("password").encode()
     assert (password != None)
     password = bcrypt.hashpw(password, bcrypt.gensalt()).decode()
     body["password"] = password
-    body["companyId"] = ObjectId(companyId)
+    body["companyId"] = company.inserted_id
+    del body["companyName"]
     auth.insert_one(body)
-    return JsonResponse({"Success": f"User {body.get('username')} created", "token": genToken(body.get("username"), companyId)})
+    return JsonResponse({"Success": f"User {body.get('username')} created", "token": genToken(body.get("username"), company.inserted_id)})
 
 
 # def get_items():

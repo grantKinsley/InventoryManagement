@@ -8,7 +8,7 @@ const baseURL = "http://localhost:8000/auth/register";
 const Register = () => {
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
-  const [companyId, setCompanyId] = useState("");
+  const [companyName, setCompanyName] = useState("");
 
   const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ const Register = () => {
     try {
       const response = await axios.post(
         baseURL,
-        JSON.stringify({ username: user, password: pwd, companyId: companyId }),
+        JSON.stringify({ username: user, password: pwd, companyName: companyName }),
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -38,6 +38,7 @@ const Register = () => {
         console.log("No Server Response");
       } else if (err.response?.status === 409) {
         console.log("Username Taken");
+        alert("Username Taken")
       } else {
         console.log("Registration Failed");
       }
@@ -59,10 +60,10 @@ const Register = () => {
             <input type="password" onChange={(e) => setPwd(e.target.value)} />
           </label>
           <label>
-            <p>CompanyId</p>
+            <p>Company Name</p>
             <input
-              type="companyId"
-              onChange={(e) => setCompanyId(e.target.value)}
+              type="companyName"
+              onChange={(e) => setCompanyName(e.target.value)}
             />
           </label>
           <div>
