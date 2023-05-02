@@ -60,7 +60,7 @@ const EditableCell = ({
 
   const onChange = e => {
     setValue(e.target.value)
-    console.log(initialValue)
+    console.log(EnhancedTable)
     //console.log(EnhancedTable.data)
   }
 
