@@ -79,7 +79,7 @@ const AddProductDialog = props => {
             type="text"
             fullWidth
             value={product.firstName}
-            onChange={handleChange('asin')}
+            onChange={handleChange('ASIN')}
           />
           <TextField
             margin="dense"

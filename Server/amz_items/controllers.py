@@ -50,11 +50,13 @@ def create_item(body, token):
     for item in body:
         
         item["companyId"] = ObjectId(token.get("companyId"))
-        item["sellingPrice"] = (float)(item["sellingPrice"])
-        item["cost"] = (float)(item["cost"])
-        if("asin" in item):
-            item["ASIN"] = item["asin"]
-            del item["asin"]
+        if "sellingPrice" in item:
+            item["sellingPrice"] = (float)(item["sellingPrice"])
+        if "cost" in item:
+            item["cost"] = (float)(item["cost"])
+        # if("asin" in item):
+        #     item["ASIN"] = item["asin"]
+        #     del item["asin"]
         if("modelName" in item):
             item["Product Title"] = item["modelName"]
             del item["modelName"]
