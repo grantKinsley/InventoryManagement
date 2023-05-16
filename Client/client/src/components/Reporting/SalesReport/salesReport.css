@@ -1,3 +1,42 @@
-.report-container {
+.main-container {
     margin: 20px;
+}
+
+.report-container {
+    
+}
+
+.filters-container {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.value {
+    font-size: large;
+    font-weight: bold;
+}
+
+.summary-container {
+    height: 20px;
+    width: 100%;
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.summary-box {
+    background-color: #F5F5F5;
+    height: 100px;
+    display: grid;
+    grid-template-rows: 1fr 2fr;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+}
+
+.summary-title {
+
 }
