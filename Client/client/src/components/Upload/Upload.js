@@ -87,6 +87,19 @@ const Upload = () => {
       <ImportPricingDialog open={openImportPricing} handleClose={handleImportPricingClose}/>
       <ImportSalesDialog open={openImportSales} handleClose={handleImportSalesClose}/>
       <ImportInventoryDialog open={openImportInventory} handleClose={handleImportInventoryClose}/>
+      <h2 className="title">
+        Internal Imports
+      </h2>
+      <div className="button-container">
+        <Button variant="contained" className="img-button" onClick={handleImportCatalogClickOpen}>
+          <AddCircleIcon className="icon"/>
+          <span> Import Orders </span>
+        </Button>
+        <Button variant="contained" className="img-button" onClick={handleImportInventoryClickOpen}>
+          <InventoryIcon className="icon"/>
+          <span> Import Inventory </span>
+        </Button>
+      </div>
     </div>
   );
 };

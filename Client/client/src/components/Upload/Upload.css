@@ -10,16 +10,17 @@
 
 .title {
     text-align: center;
-    margin: 50px;
-    
+    margin: 20px;
+    background-color:  #F5F5F5;
 }
 
 .button-container {
-    margin: 200px;
+    margin: 50px;
     display: grid;
     align-items: center;
+    padding: 50px;
+    background-color: white;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 100px 100px;
     gap: 10px;
 }
 

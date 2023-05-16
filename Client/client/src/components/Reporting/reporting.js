@@ -2,28 +2,30 @@ import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import AuthContext from "../../context-Api/AuthProvider";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import "./settings.css"
+import "./reporting.css"
 
-import SettingsNavbar from "./settingsNavbar";
-import General from "./General/generalSettings.js"
+import ReportingNavbar from "./reportingNavbar";
+import SalesReport from "./SalesReport/salesReport.js"
 
-const Settings = () => {
+const Reporting = () => {
 
     if (sessionStorage.getItem("serverToken") === null) {
         return <Navigate to="/login" />;
     }
 
     return (
-        <div className="setting-container">
-            <SettingsNavbar />
+        <div className="reporting-container">
+            <ReportingNavbar />
             <div className="sub-container">
                 <Routes>
                     <Route exact path="/"
-                        element={<General />} />
+                        element={<SalesReport />} />
+                    <Route path="*"
+                        element={<Navigate to="/*" />} />
                 </Routes>
             </div>
         </div>
     )
 }
 
-export default Settings;
+export default Reporting;

@@ -29,7 +29,7 @@ export const navData = [
         id: 3,
         icon: <SummarizeIcon />,
         text: "Reporting",
-        link: "/report"
+        link: "/reports"
     },
     {
         id: 4,

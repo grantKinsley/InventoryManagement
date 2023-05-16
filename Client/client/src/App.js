@@ -10,6 +10,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Analysis from './components/Analysis/analysis';
 import History from './components/History/History.js';
 import Settings from './components/Settings/settings.js';
+import Reporting from './components/Reporting/reporting';
 
 function App() {
   return (
@@ -27,6 +28,8 @@ function App() {
             element={<Register />} />
           <Route exact path="/upload"
             element={<Upload />} />
+          <Route exact path="/reports"
+            element={<Reporting />} />
           <Route exact path="/analysis/*"
             element={<Analysis />} />
           <Route exact path="/settings/*"

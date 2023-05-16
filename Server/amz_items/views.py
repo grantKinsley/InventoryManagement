@@ -1,18 +1,25 @@
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render, HttpResponse
+import logging
 from . import controllers
 from . import middleware
 import json
 import csv as CSV
 
+logger = logging.getLogger(__name__)
 # Create your views here.
-
-
 # Route: /amz_items/
 @csrf_exempt
 @middleware.authentication_required
 def amz_items(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    logger.info("IP: " + ip + " accessed amz_items ")
     try:
         token = request.META.get("decoded_token")
         if request.method == 'GET':
@@ -38,6 +45,12 @@ def amz_items(request):
 @csrf_exempt
 @middleware.authentication_required
 def amz_item(request, asin):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    logger.info(ip)
     try:
         token = request.META.get("decoded_token")
         if request.method == 'GET':
@@ -80,6 +93,7 @@ def write_report_search(request, asin):
 
 
 def downloadCSV(lis):
+    
     try:
         response = HttpResponse(
             content_type='text/csv',

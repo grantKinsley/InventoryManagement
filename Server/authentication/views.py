@@ -2,8 +2,12 @@
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+import json
+import logging
 from . import controllers
 
+
+logger = logging.getLogger("user-auth")
 # Create your views here.
 
 

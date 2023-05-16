@@ -6,6 +6,7 @@ import json
 import bcrypt
 import jwt
 import datetime
+import logging
 
 SECRET_KEY = "CHANGEMELATER"
 
@@ -16,7 +17,7 @@ db = client["inventory-cluster"]
 
 auth = db.auth
 companies = db.companies
-
+logger = logging.getLogger("user-auth")
 
 def genToken(username, companyId):
     expiration_date = datetime.datetime.now(
@@ -27,6 +28,11 @@ def genToken(username, companyId):
 
 
 def login(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
     body = json.loads(request.body.decode('utf-8'))
     username = body.get("username")
 
@@ -39,8 +45,10 @@ def login(request):
     hashed_password = user_document.get("password").encode()
 
     if not bcrypt.checkpw(password, hashed_password):
+        logger.info("Failed login to " + username + " from " + ip)
         return JsonResponse({"Error": "Invalid Username and/or Password"})
 
+    logger.info("Successful login to " + username + " from " + ip)
     return JsonResponse({"token": genToken(username, companyId)})
 
 

@@ -52,6 +52,56 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+LOGGING = {
+'version': 1,
+'disable_existing_loggers': False,
+'formatters': {
+    'time-only': {
+        'format': '[%(asctime)s] %(message)s',
+        'datefmt': '%Y-%m-%d %H:%M:%S',
+    },
+    'simple': {
+        'format': '[%(asctime)s] %(levelname)s|%(name)s|%(message)s',
+        'datefmt': '%Y-%m-%d %H:%M:%S',
+    },
+},
+'handlers': {
+    'applogfile': {
+        'level': 'DEBUG',
+        'class': 'logging.handlers.RotatingFileHandler',
+        'filename': './logs/info.log',
+        'backupCount': 10,
+        'formatter': 'simple',
+    },
+    'console': {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'simple'
+    },
+    'loguserfile': {
+        'level': 'INFO',
+        'class': 'logging.FileHandler',
+        'filename': './logs/users.log',
+        'formatter': 'time-only',
+    },
+},
+'loggers': {
+    'django': {
+        'handlers': ['applogfile', 'console'],
+        'level': 'INFO',
+    },
+    'user-auth': {
+        'handlers': ['loguserfile'],
+        'level': 'INFO',
+    },
+},
+'root': {
+    'handlers': ['applogfile'],
+    'level': 'INFO',
+}
+}
+
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000"
 ]
