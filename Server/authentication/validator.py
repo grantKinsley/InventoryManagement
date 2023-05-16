@@ -11,7 +11,7 @@ auth = db.auth
 schema = {"$jsonSchema":
           {
               "bsonType": "object",
-              "required": ["username", "password", "companyId"],
+              "required": ["username", "password"],
               "additionalProperties": False,
               "properties": {
                   "_id": {  # Auto populated by mongo
