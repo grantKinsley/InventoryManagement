@@ -2,11 +2,13 @@ from django.http import JsonResponse
 from pymongo import MongoClient
 from bson.json_util import dumps
 from bson import ObjectId
+from aes_cipher import DataEncrypter, DataDecrypter
 import json
 import bcrypt
 import jwt
 import datetime
 import logging
+import hashlib
 
 SECRET_KEY = "CHANGEMELATER"
 
@@ -47,17 +49,33 @@ def login(request):
     if not bcrypt.checkpw(password, hashed_password):
         logger.info("Failed login to " + username + " from " + ip)
         return JsonResponse({"Error": "Invalid Username and/or Password"})
-
+    curTime = datetime.datetime.now()
+    auth.update_one({"username": username}, { "$set": { 'lastLogin': curTime } })
     logger.info("Successful login to " + username + " from " + ip)
     return JsonResponse({"token": genToken(username, companyId)})
 
 
 def register(request):
+    
     body = json.loads(request.body.decode('utf-8'))
+    print("STARTING HASH")
+    data_encrypter = DataEncrypter()
+    print("CLASS CREATED")
+    data_encrypter.Encrypt(body.get("email"), "CHANGEMELATER")
+    print("ENCRYPTION COMPLETE")
+    # print(str(data_encrypter.GetEncryptedData()), body.get("email"))
+    body["email"] = data_encrypter.GetEncryptedData()
+    # data_decrypter = DataDecrypter()
+    # data_decrypter.Decrypt(body['email'], "CHANGEMELATER")
+    # print(str(data_decrypter.GetDecryptedData()))
+    print("ENDING HASH")
     username = body.get("username")
     prevUser = auth.find_one({"username": username})
     if prevUser:
         return JsonResponse({"Error": f'User {body.get("username")} already exists.'}, status=409)
+    prevUser = auth.find_one({"email": body.get('email')})
+    if prevUser:
+        return JsonResponse({"Error": f'Email already exists.'}, status=409)
     assert ("companyName" in body)
     company = companies.insert_one({"name": body.get("companyName")})
     password = body.get("password").encode()
@@ -66,6 +84,8 @@ def register(request):
     body["password"] = password
     body["companyId"] = company.inserted_id
     del body["companyName"]
+    curTime = datetime.datetime.now()
+    body["lastLogin"] = curTime
     auth.insert_one(body)
     return JsonResponse({"Success": f"User {body.get('username')} created", "token": genToken(body.get("username"), company.inserted_id)})
 

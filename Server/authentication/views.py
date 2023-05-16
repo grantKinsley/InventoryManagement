@@ -20,6 +20,7 @@ def login(request):
         else:
             return JsonResponse({"Error 404": f"Invalid requst type"}, status=400)
     except Exception as err:
+        print(err)
         return JsonResponse({"Error": "Login attempt failed"}, status=401)
 
 
@@ -31,4 +32,5 @@ def register(request):
         else:
             return JsonResponse({"Error 404": f"Invalid requst type"}, status=400)
     except Exception as err:
+        print(err)
         return JsonResponse({"Error": f"{err}"}, status=400)

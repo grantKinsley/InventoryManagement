@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, useContext } from "react";
+import {Spinner} from 'react-bootstrap';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
@@ -8,6 +9,8 @@ const baseURL = "http://localhost:8000/auth/register";
 const Register = () => {
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
+  const [email, setEmail] = useState("");
+  const [loading,setLoading] = useState(false);
   const [companyName, setCompanyName] = useState("");
 
   const navigate = useNavigate();
@@ -15,9 +18,10 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const response = await axios.post(
         baseURL,
-        JSON.stringify({ username: user, password: pwd, companyName: companyName }),
+        JSON.stringify({ username: user, password: pwd, companyName: companyName, email: email}),
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -35,13 +39,16 @@ const Register = () => {
       //clear state and controlled inputs
     } catch (err) {
       if (!err?.response) {
+        alert("No Server Response")
         console.log("No Server Response");
       } else if (err.response?.status === 409) {
         console.log("Username Taken");
         alert("Username Taken")
       } else {
+        alert("Registration Failed")
         console.log("Registration Failed");
       }
+      setLoading(false);
     }
   };
 
@@ -51,6 +58,10 @@ const Register = () => {
       <div className="login-wrapper">
         <h1>Register</h1>
         <form onSubmit={handleSubmit}>
+          <label>
+            <p>Email</p>
+            <input type="email" onChange={(e) => setEmail(e.target.value)} />
+          </label>
           <label>
             <p>Username</p>
             <input type="text" onChange={(e) => setUser(e.target.value)} />
@@ -67,7 +78,7 @@ const Register = () => {
             />
           </label>
           <div>
-            <button type="submit">Submit</button>
+            <button type="submit" disabled={loading}>{loading ? "LOADING" : "Submit"}</button>
           </div>
         </form>
         <button onClick={() => navigate("/login")}>Login here</button>

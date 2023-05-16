@@ -20,10 +20,20 @@ const History = () => {
 	
 	const [asin, setASIN] = useState(0);
 	const [options, setOptions] = useState(null);
+
+	useEffect(() => {
+		if (datapoints !== {}) {
+			// console.log(datapoints);
+			renderChart();
+		}
+	})
+
 	const accessToken = sessionStorage.getItem("serverToken");
 	if (sessionStorage.getItem("serverToken") === null) {
 		return <Navigate to="/login" />;
 	}
+
+	
 
 	const getTimeSeries = async () => {
 		
@@ -45,7 +55,7 @@ const History = () => {
 		// }
 		// console.log(response.data)
 		const result = JSON.parse(response.data);
-		// console.log(result)
+		console.log(result)
 		const tuples = []
 		result.forEach(element => {
 			tuples.push({
@@ -73,22 +83,26 @@ const History = () => {
 			orderedUnits.push(element['orderedUnits']);
 			inventory.push(element['inventory']);
 		})
-		console.log(timestamp)
+		// console.log(timestamp)
 		// console.log(price)
 		
 		setTimestamp(timestamp);
-		setDatapoints({
+		// console.log(timestamp)
+		const data = {
 			"sellingPrice":sellingPrice,
 			"cost":cost, 
 			"orderedUnits":orderedUnits, 
 			"inventory":inventory, 
-		});
-		console.log("data:", datapoints)
+		}
+		setDatapoints(data);
+		// console.log("data:", datapoints)
+	}
 
+	function renderChart() {
 		const charts = document.getElementById("charts");
 
 		let chartExists = Chart.getChart("charts");
-		if(chartExists != undefined){
+		if(chartExists !== undefined){
 			chartExists.destroy();
 		}
 
@@ -126,8 +140,6 @@ const History = () => {
 				]
 			}
 		})
-
-		
 	}
 
 	function filterDate() {
