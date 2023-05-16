@@ -8,6 +8,7 @@ const baseURL = "http://localhost:8000/auth/register";
 const Register = () => {
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
+  const [email, setEmail] = useState("");
   const [companyName, setCompanyName] = useState("");
 
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const Register = () => {
     try {
       const response = await axios.post(
         baseURL,
-        JSON.stringify({ username: user, password: pwd, companyName: companyName }),
+        JSON.stringify({ username: user, password: pwd, companyName: companyName, email: email}),
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -51,6 +52,10 @@ const Register = () => {
       <div className="login-wrapper">
         <h1>Register</h1>
         <form onSubmit={handleSubmit}>
+          <label>
+            <p>Email</p>
+            <input type="email" onChange={(e) => setEmail(e.target.value)} />
+          </label>
           <label>
             <p>Username</p>
             <input type="text" onChange={(e) => setUser(e.target.value)} />

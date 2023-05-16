@@ -40,7 +40,8 @@ def login(request):
 
     if not bcrypt.checkpw(password, hashed_password):
         return JsonResponse({"Error": "Invalid Username and/or Password"})
-
+    curTime = datetime.datetime.now()
+    auth.update_one({"username": username}, { "$set": { 'lastLogin': curTime } })
     return JsonResponse({"token": genToken(username, companyId)})
 
 
@@ -58,6 +59,8 @@ def register(request):
     body["password"] = password
     body["companyId"] = company.inserted_id
     del body["companyName"]
+    curTime = datetime.datetime.now()
+    body["lastLogin"] = curTime
     auth.insert_one(body)
     return JsonResponse({"Success": f"User {body.get('username')} created", "token": genToken(body.get("username"), company.inserted_id)})
 

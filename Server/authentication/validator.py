@@ -17,6 +17,10 @@ schema = {"$jsonSchema":
                   "_id": {  # Auto populated by mongo
                       "bsonType": "objectId"
                   },
+                  "email": {
+                      "bsonType": "string",
+                      "description": "Encrypted email address"
+                  },
                   "username": {
                       "bsonType": "string",
                       "minLength": 4,
@@ -32,6 +36,9 @@ schema = {"$jsonSchema":
                   "companyId": {
                       "bsonType": "objectId",
                       "description": "Mapping to company and is required"
+                  },
+                  "lastLogin": {
+                      "description": "Last login time"
                   }
               }
           }
