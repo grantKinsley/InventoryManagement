@@ -68,18 +68,18 @@ def register(request):
     prevUser = auth.find_one({"email": body.get('email')})
     if prevUser:
         return JsonResponse({"Error": f'Email already exists.'}, status=409)
-    assert ("companyName" in body)
-    company = companies.insert_one({"name": body.get("companyName")})
+    # assert ("companyName" in body)
+    # company = companies.insert_one({"name": body.get("companyName")})
+    # body["companyId"] = company.inserted_id
+    # del body["companyName"]
     password = body.get("password").encode()
     assert (password != None)
     password = bcrypt.hashpw(password, bcrypt.gensalt()).decode()
     body["password"] = password
-    body["companyId"] = company.inserted_id
-    del body["companyName"]
     curTime = datetime.datetime.now()
     body["lastLogin"] = curTime
     auth.insert_one(body)
-    return JsonResponse({"Success": f"User {body.get('username')} created", "token": genToken(body.get("username"), company.inserted_id)})
+    return JsonResponse({"Success": f"User {body.get('username')} created", "token": genToken(body.get("username"), "")})
 
 
 # def get_items():

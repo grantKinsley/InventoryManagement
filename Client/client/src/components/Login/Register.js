@@ -21,7 +21,7 @@ const Register = () => {
       setLoading(true);
       const response = await axios.post(
         baseURL,
-        JSON.stringify({ username: user, password: pwd, companyName: companyName, email: email}),
+        JSON.stringify({ username: user, password: pwd, email: email}), // Removed companyName from upload list
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -70,13 +70,13 @@ const Register = () => {
             <p>Password</p>
             <input type="password" onChange={(e) => setPwd(e.target.value)} />
           </label>
-          <label>
+          {/* <label>
             <p>Company Name</p>
             <input
               type="companyName"
               onChange={(e) => setCompanyName(e.target.value)}
             />
-          </label>
+          </label> */}
           <div>
             <button type="submit" disabled={loading}>{loading ? "LOADING" : "Submit"}</button>
           </div>
