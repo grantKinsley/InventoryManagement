@@ -18,7 +18,6 @@ schema = {"$jsonSchema":
                       "bsonType": "objectId"
                   },
                   "email": {
-                      "bsonType": "string",
                       "description": "Encrypted email address"
                   },
                   "username": {
@@ -55,3 +54,4 @@ print("Validator Updated")
 # Enforces that "asin" field is unique value
 auth.create_index("username", unique=True)
 print("Index Updated")
+
