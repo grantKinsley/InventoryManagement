@@ -83,21 +83,6 @@ const Login = () => {
             />
           </label>
           <div className="invalidText">{errMsg}</div>
-          {/* {
-            numAttempts > 0 && numAttempts < 5 &&
-            <div className="invalidText">
-              {errMsg}
-              <div id="attemptText">
-                You have {5- numAttempts} attempts remaining. 
-              </div>
-            </div>
-          }
-          {
-            numAttempts >= 5 &&
-            <div className="invalidText">
-              Your account has been locked.
-            </div>
-          }  */}
           <div>
             <button type="submit">Submit</button>
           </div>
