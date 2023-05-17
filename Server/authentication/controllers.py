@@ -40,17 +40,24 @@ def login(request):
 
     user_document = auth.find_one({"username": username})
     if user_document == None:
-        return JsonResponse({"Error": "Invalid Username and/or Password"})
+        return JsonResponse({"Error": "Username does not exist", "Status": 402})
 
     companyId = str(user_document.get("companyId"))
     password = body.get("password").encode()
     hashed_password = user_document.get("password").encode()
 
+    numAttempts = user_document['loginAttempts']
+
     if not bcrypt.checkpw(password, hashed_password):
         logger.info("Failed login to " + username + " from " + ip)
-        return JsonResponse({"Error": "Invalid Username and/or Password"})
+        auth.update_one({"username": username}, { "$inc": { "loginAttempts": 1 }})
+        
+        if numAttempts >= 5:
+            return JsonResponse({"Error": "Your account has been locked", "Status": 403})
+        
+        return JsonResponse({"Error": "Incorrect Password", "loginAttempts":numAttempts+1, "Status": 401})
     curTime = datetime.datetime.now()
-    auth.update_one({"username": username}, { "$set": { 'lastLogin': curTime } })
+    auth.update_one({"username": username}, { "$set": { 'lastLogin': curTime, 'loginAttempts': 0 } })
     logger.info("Successful login to " + username + " from " + ip)
     return JsonResponse({"token": genToken(username, companyId)})
 
@@ -86,6 +93,7 @@ def register(request):
     body["password"] = password
     curTime = datetime.datetime.now()
     body["lastLogin"] = curTime
+    body["loginAttempts"] = 0
     auth.insert_one(body)
     return JsonResponse({"Success": f"User {body.get('username')} created", "token": genToken(body.get("username"), "")})
 

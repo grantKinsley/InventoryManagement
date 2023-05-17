@@ -38,6 +38,10 @@ schema = {"$jsonSchema":
                   },
                   "lastLogin": {
                       "description": "Last login time"
+                  },
+                  "loginAttempts": {
+                      "bsonType": "int",
+                      "description": "tracks number of password attempts",
                   }
               }
           }

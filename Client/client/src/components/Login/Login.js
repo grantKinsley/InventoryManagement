@@ -13,6 +13,7 @@ const baseURL = "http://localhost:8000/auth/login";
 const Login = () => {
   const [usr, setUserName] = useState();
   const [pwd, setPassword] = useState();
+  const [errMsg, setErrMsg] = useState("");
 
   const { setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -27,6 +28,22 @@ const Login = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
+      const resData = response?.data;
+      const resErr = resData.Error;
+      const loginAttempts = resData.loginAttempts;
+      const resStatus = resData.Status;
+      console.log(resData)
+      if (resStatus === 402) {  // bad username
+        setErrMsg(resErr);
+        return;
+      } else if (resStatus === 401) { // bad password
+        const errMsg = resErr + " You have " + (5 - loginAttempts) + " attempts remaining";
+        setErrMsg(errMsg);
+        return;
+      } else if (resStatus === 403) { // account lockout
+        setErrMsg(resErr);
+        return;
+      }
       const token = response?.data?.token;
       sessionStorage.setItem("serverToken", token); // store token locally
       sessionStorage.setItem("username", usr)
@@ -65,6 +82,22 @@ const Login = () => {
               required
             />
           </label>
+          <div className="invalidText">{errMsg}</div>
+          {/* {
+            numAttempts > 0 && numAttempts < 5 &&
+            <div className="invalidText">
+              {errMsg}
+              <div id="attemptText">
+                You have {5- numAttempts} attempts remaining. 
+              </div>
+            </div>
+          }
+          {
+            numAttempts >= 5 &&
+            <div className="invalidText">
+              Your account has been locked.
+            </div>
+          }  */}
           <div>
             <button type="submit">Submit</button>
           </div>

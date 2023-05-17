@@ -23,3 +23,13 @@
 button {
     margin-top: 25px;
 }
+
+.invalidText {
+    color: red;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+#attemptText {
+    font-size: 10px;
+}
