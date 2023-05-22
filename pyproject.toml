@@ -15,6 +15,7 @@ pyjwt = "^2.6.0"
 mongo-schema = "^1.0.0.post0"
 django-cors-headers = "^3.14.0"
 aes-cipher = "^2.0.0"
+django-blacklist = "^0.7.0"
 
 
 [tool.poetry.group.dev.dependencies]
