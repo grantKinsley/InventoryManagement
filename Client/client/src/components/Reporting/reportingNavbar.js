@@ -46,7 +46,7 @@ const ReportingNavbar = () => {
           <span className={styles.linkText}>{item.text}</span>
         </NavLink>
       })}
-      <button onClick={downloadCSV}>Default</button>;
+      <button onClick={downloadCSV}>Download CSV</button>;
     </div>
   );
 };

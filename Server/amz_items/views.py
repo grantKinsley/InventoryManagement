@@ -88,7 +88,8 @@ def write_report_sales(request):
             token = request.META.get("decoded_token")
             lis = controllers.get_list_search(token)
             #lis = controllers.get_list()
-            excludedColumns = ["Manufacturer Code", "Prep Instructions Vendor State","Replenishment Category","ISBN-13", "Prep Instructions Required","Product Group","Release Date","Replenishment Category"]
+            excludedColumns = ["Manufacturer Code", "Prep Instructions Vendor State","Replenishment Category","ISBN-13", "Prep Instructions Required","Product Group","Release Date","Replenishment Category"
+                                "UPC", ]
             return downloadCSV(lis,excludedColumns)
     except Exception as err:
         print(err)
@@ -126,7 +127,7 @@ def downloadCSV(lis,excludedColumns):
 
         for row in lis:
             items = list(row.items())
-            list(filter(lambda x: x[0] not in excludedColumns, items))
+            items = list(filter(lambda x: x[0] not in excludedColumns, items))
             values = [x[1] for x in items]
             writer.writerow(values)
 
