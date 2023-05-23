@@ -131,3 +131,11 @@ def getTimeSeries(asin, token):
         str(asin), "metadata.companyId": ObjectId(token.get("companyId"))}))
     print(items)
     return JsonResponse(dumps(items), safe=False)
+
+def get_asins(token):
+    asins = amz_items.find(
+        {"companyId": ObjectId(token.get("companyId"))}, 
+        { "ASIN": 1, "_id": 0 })
+    res = [x['ASIN'] for x in asins]
+    print(res)
+    return JsonResponse(res, safe=False)
