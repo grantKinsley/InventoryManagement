@@ -3,7 +3,7 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 import AuthContext from "../../../context-Api/AuthProvider";
 
-
+// Imports from MUI
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
@@ -14,6 +14,11 @@ import Button from '@mui/material/Button';
 import DatePicker from "react-datepicker";
 import LoadingSpinner from "../../LoadingSpinner/spinner"
 
+// Imports for Charts
+import Chart from 'chart.js/auto';
+import { Line } from "react-chartjs-2";
+
+// Style
 import "./salesReport.css"
 
 const baseURL = "http://localhost:8000/amz_items/";
@@ -28,6 +33,21 @@ const SalesReport = () => {
     if (sessionStorage.getItem("serverToken") === null) {
         return <Navigate to="/login" />;
     }
+
+    // Temporary
+    const data = {
+        labels: ["05/15/23", "05/16/23", "05/17/23", "05/18/23", "05/19/23"],
+        datasets: [
+            {
+                label: 'Test',
+                data: [0, 5, 2, 3, 5],
+                fill: false,
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            }
+        ]
+    };
+
 
     const generateReport = async (e) => {
         e.preventDefault();
@@ -61,7 +81,7 @@ const SalesReport = () => {
                         value={timeframe}
                         label="Timeframe"
                         onChange={handleChange}
-                        style={{ minWidth: '50px', height: '40px' }}
+                        style={{ minWidth: '50px', height: '30px' }}
                     >
                         <MenuItem value={1}> Daily </MenuItem>
                         <MenuItem value={2}> Weekly </MenuItem>
@@ -73,7 +93,10 @@ const SalesReport = () => {
                     selected={date}
                     onChange={(date) => setDate(date)}
                 />
-                <Button variant="contained" onClick={generateReport} disabled={loading}> Generate </Button>
+                <Button variant="contained" onClick={generateReport} disabled={loading} 
+                style={{ minWidth: '100px' }}> 
+                    Generate 
+                </Button>
             </div>
             <LoadingSpinner loading={loading}/>
             <div className="report-container" style={showReport ? {} : { display: 'none' }}>
@@ -90,6 +113,9 @@ const SalesReport = () => {
                         <span className="summary-title"> Customer Returns </span>
                         <span className="value"> 231 </span>
                     </div>
+                </div>
+                <div className="graph-container">
+                   
                 </div>
             </div>
         </div>

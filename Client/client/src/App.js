@@ -11,6 +11,7 @@ import Analysis from './components/Analysis/analysis';
 import History from './components/History/History.js';
 import Settings from './components/Settings/settings.js';
 import Reporting from './components/Reporting/reporting';
+import Invoices from './components/Invoices/invoices';
 
 function App() {
   return (
@@ -26,6 +27,8 @@ function App() {
             element={<Catalog />} />
           <Route exact path="/register"
             element={<Register />} />
+          <Route exact path="/invoices"
+            element={<Invoices />} />
           <Route exact path="/upload"
             element={<Upload />} />
           <Route exact path="/reports"
