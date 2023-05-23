@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from pymongo import MongoClient, UpdateOne, InsertOne
 from bson.json_util import dumps
 from bson import ObjectId
+from dateutil import parser
 import datetime
 
 from . import validator  # nopep8
@@ -139,3 +140,20 @@ def get_asins(token):
     res = [x['ASIN'] for x in asins]
     print(res)
     return JsonResponse(res, safe=False)
+
+def get_general_history(start,end,token):
+    # Parser should be able to parse any sort of datetime format you throw at it. 
+    # In frontend, use javascript Date toJson method before sending to backend (not confirmed that it works yet)
+    # Checked that date works when format is "Y-M-D H:M:S.TimezoneCode" eg 2023-05-22 13:55:31.406482
+    start = parser.parse(start)
+    end = parser.parse(end)
+    items = list(priceTimeSeries.find(
+        {"metadata.companyId": ObjectId(token.get("companyId")), 
+        #  "timestamp": {"$lte": end}}
+            "timestamp": {"$gte": start, "$lte":end}}
+         ))
+    # Use the below prints to 
+    # total_items = list(priceTimeSeries.find({"metadata.companyId": ObjectId(token.get("companyId"))}))
+    # print("LENGTH QUERY", len(items))
+    # print("LENGTH ALL", len(total_items))
+    return JsonResponse(dumps(items), safe=False)
