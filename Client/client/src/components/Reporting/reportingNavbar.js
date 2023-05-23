@@ -1,4 +1,6 @@
 // import React from 'react';
+import axios from "axios";
+import fileDownload from "js-file-download";
 import { useState, useContext, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styles from "./reportingNavbar.module.css";
@@ -9,10 +11,29 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { NavLink } from "react-router-dom"
 
+const baseURL = "http://localhost:8000/amz_items/";
 
 const ReportingNavbar = () => {
   const location = useLocation();
   const [open, setopen] = useState(true)
+  const downloadCSV = async (e) => {
+    const accessToken = sessionStorage.getItem("serverToken");
+    const reportURL = baseURL + "reportSales";
+    const response = await axios
+      .get(reportURL, {
+        responseType: "blob",
+        headers: {
+          Bearer: accessToken,
+        }
+      })
+      .then((res) => {
+        fileDownload(res.data, "fileName.CSV");
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   if (location.pathname === "/login" || location.pathname === "/register")
     return null;
@@ -25,6 +46,7 @@ const ReportingNavbar = () => {
           <span className={styles.linkText}>{item.text}</span>
         </NavLink>
       })}
+      <button onClick={downloadCSV}>Default</button>;
     </div>
   );
 };
