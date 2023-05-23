@@ -1,0 +1,82 @@
+.invoices_container {
+    display: flex;
+}
+.sidenav {
+    width: 400px;
+    transition: width 0.3s ease-in-out;
+    height: 100vh;
+    background-color: #F5F5F5;
+}
+
+.sidenav_title {
+    display: flex;
+    align-self: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+.sideitem {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    cursor: pointer;
+    color: rgb(122, 122, 122);
+    text-decoration: none;
+    width: 100%;
+}
+
+.linkText {
+    padding-left: 16px;
+}
+
+.sideitem:hover {
+    background-color: #244f7d1c;
+
+}
+
+.menuBtn {
+    align-self: center;
+    align-self: flex-start;
+    justify-self: flex-end;
+    color: #B2BAC2;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding-left: 20px;
+}
+
+.userbox {
+    color: #B2BAC2;
+    background-color: #244f7d1c;
+    margin: 20px;
+    margin-top: 400px;
+
+}
+
+.sub_container {
+    width: 100%;
+}
+
+.invoice_header {
+    display: flex;
+    flex-direction: column;
+}
+
+.invoice_title {
+    text-align: center;
+}
+
+.invoice_date {
+    text-align: center;
+}
+
+.invoice_details {
+    padding-top: 20px;
+    padding-bottom: 50px;
+}
+
+.invoice_items {
+    display: flex;
+    flex-direction: column;
+}

@@ -5,6 +5,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import HistoryIcon from '@mui/icons-material/History';
 import SummarizeIcon from '@mui/icons-material/Summarize';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 
 export const navData = [
     {
@@ -33,12 +34,18 @@ export const navData = [
     },
     {
         id: 4,
+        icon: <ReceiptIcon />,
+        text: "Invoices",
+        link: "/invoices"
+    },
+    {
+        id: 5,
         icon: <FileUploadIcon />,
         text: "Import",
         link: "/upload"
     },
     {
-        id: 5,
+        id: 6,
         icon: <SettingsIcon />,
         text: "Settings",
         link: "/settings"
