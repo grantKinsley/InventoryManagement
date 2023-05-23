@@ -81,15 +81,14 @@ def write_report(request):
         return JsonResponse({"Error 404": f"{err}"})
 
 
-def write_report_search(request, asin):
-    try:
-        if request.method == 'GET':
-
-            lis = controllers.get_list_search(asin)
-            return downloadCSV(lis)
-    except Exception as err:
-        print(err)
-        return JsonResponse({"Error 404": f"{err}"})
+# def write_report_filter(request, exclusions):
+#     try:
+#         if request.method == 'GET':
+#             lis = controllers.get_list_search(token)
+#             return downloadCSV(lis)
+#     except Exception as err:
+#         print(err)
+#         return JsonResponse({"Error 404": f"{err}"})
 
 
 def downloadCSV(lis):
@@ -103,7 +102,7 @@ def downloadCSV(lis):
         writer = CSV.writer(response)
 
         # For exlcuding columns assuming the column names are passed as a list of strings
-        excludedColumns = []
+        excludedColumns = ["Manufacturer Code", "Prep Instructions Vendor State"]
         if (len(lis) < 1):
             return response
         keys = list(lis[0].keys())
@@ -114,13 +113,17 @@ def downloadCSV(lis):
                 columnsNumbers.insert(0, i)
             else:
                 columnNames.append(keys[i])
-
         writer.writerow(columnNames)
 
+        #change template to true if you do not want the data
+        template = False
+        if(template):
+            return response
+
         for row in lis:
-            values = list(row.values())
-            for i in range(len(columnsNumbers)):
-                values.pop(columnsNumbers[i])
+            items = list(row.items())
+            list(filter(lambda x: x[0] not in excludedColumns, items))
+            values = [x[1] for x in items]
             writer.writerow(values)
 
         return response
