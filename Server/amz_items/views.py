@@ -134,6 +134,14 @@ def price_history(request,asin):
     token = request.META.get("decoded_token")
     return controllers.getTimeSeries(asin,token)
 
+@csrf_exempt
+@middleware.authentication_required
 def delete_one(request,asin):
     token = request.META.get("decoded_token")
     return controllers.delete_item(asin, token)
+
+@csrf_exempt
+@middleware.authentication_required
+def get_all_asins(request):
+    token = request.META.get("decoded_token")
+    return controllers.get_asins(token)

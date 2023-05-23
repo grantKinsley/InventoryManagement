@@ -9,6 +9,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import "./History.css"
+import { TextField } from "@mui/material";
 
 
 const baseURL = "http://localhost:8000/amz_items/";
@@ -20,11 +21,15 @@ const History = () => {
 	
 	const [asin, setASIN] = useState(0);
 	const [options, setOptions] = useState(null);
+	const [allAsins, setAllAsins] = useState(null);
 
 	useEffect(() => {
 		if (datapoints !== {}) {
 			// console.log(datapoints);
 			renderChart();
+		}
+		if (allAsins === null) {
+			autocompleteDropdown();
 		}
 	})
 
@@ -201,11 +206,27 @@ const History = () => {
 		histChart.update('none')
 	}
 
+	const autocompleteDropdown = async () => {
+		const response = await axios.get(baseURL + "asins",{headers: { "Content-Type": "application/json", Bearer: accessToken },});
+		// console.log(response)
+		const result = response.data;
+		// console.log(result);
+		setAllAsins(result);
+	}
+
 	return (
 		<div className="container">
-			<label>
+			{/* <label>
 				Enter ASIN: <input value={asin} onChange={e => setASIN(e.target.value)} />
-			</label>
+			</label> */}
+			{/* <button onClick={autocompleteDropdown}>autocomplete</button> */}
+			<Autocomplete
+				onChange={(event, newValue) => {
+					setASIN(newValue)
+				}}
+				options={allAsins}
+				renderInput={(params) => <TextField {...params} label="ASIN"/>}
+			/>
 			<button onClick={getTimeSeries}>Show History</button>
 			<div id="chart-space">
 				Start: <input type="date" id="startDate"/> End: <input type="date" id="endDate"/>
