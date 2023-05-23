@@ -81,14 +81,15 @@ def write_report(request):
         return JsonResponse({"Error 404": f"{err}"})
 
 
-# def write_report_filter(request, exclusions):
-#     try:
-#         if request.method == 'GET':
-#             lis = controllers.get_list_search(token)
-#             return downloadCSV(lis)
-#     except Exception as err:
-#         print(err)
-#         return JsonResponse({"Error 404": f"{err}"})
+def write_report_search(request, asin):
+    try:
+        if request.method == 'GET':
+
+            lis = controllers.get_list_search(asin)
+            return downloadCSV(lis)
+    except Exception as err:
+        print(err)
+        return JsonResponse({"Error 404": f"{err}"})
 
 
 def downloadCSV(lis):
