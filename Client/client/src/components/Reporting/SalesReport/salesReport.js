@@ -20,6 +20,7 @@ import { Line } from "react-chartjs-2";
 
 // Style
 import "./salesReport.css"
+import { render } from "react-dom";
 
 const baseURL = "http://localhost:8000/amz_items/";
 
@@ -29,6 +30,12 @@ const SalesReport = () => {
     const [timeframe, setTimeframe] = useState(0);
     const [date, setDate] = useState(new Date());
 
+    useEffect(() => {
+		if (showReport) {
+			renderChart();
+		}
+	})
+
     const accessToken = sessionStorage.getItem("serverToken");
     if (sessionStorage.getItem("serverToken") === null) {
         return <Navigate to="/login" />;
@@ -37,6 +44,7 @@ const SalesReport = () => {
     // Temporary
     const data = {
         labels: ["05/15/23", "05/16/23", "05/17/23", "05/18/23", "05/19/23"],
+        values: [0, 5, 2, 3, 5],
         datasets: [
             {
                 label: 'Test',
@@ -53,7 +61,7 @@ const SalesReport = () => {
         e.preventDefault();
         try {
             setLoading(true);
-            const response = await axios.get(baseURL + "hist/", { headers: { "Content-Type": "application/json", Bearer: accessToken }, });
+            const response = await axios.get(baseURL + "hist", { headers: { "Content-Type": "application/json", Bearer: accessToken }, });
             const result = JSON.parse(response?.data);
             console.log(result);
             setShowReport(true)
@@ -69,6 +77,33 @@ const SalesReport = () => {
     const handleChange = (event) => {
         setTimeframe(event.target.value);
     };
+
+    function renderChart() {
+		const chart = document.getElementById("chart");
+
+		let chartExists = Chart.getChart("chart");
+		if(chartExists !== undefined){
+			chartExists.destroy();
+		}
+
+		const new_chart = new Chart(chart,{
+			type:"line",
+			options: {
+				aspectRatio: 1,
+			},
+			data: {
+				labels: data.labels,
+				datasets: [
+					{
+						label: "test",
+						data: data.values,
+						fill: false,
+					}
+
+				]
+			}
+		})
+	}
 
     return (
         <div className="main-container">
@@ -115,7 +150,7 @@ const SalesReport = () => {
                     </div>
                 </div>
                 <div className="graph-container">
-                   
+				    <canvas id="chart" width="200" height="200"></canvas>
                 </div>
             </div>
         </div>

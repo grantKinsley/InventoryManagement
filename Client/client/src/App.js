@@ -31,7 +31,7 @@ function App() {
             element={<Invoices />} />
           <Route exact path="/upload"
             element={<Upload />} />
-          <Route exact path="/reports"
+          <Route exact path="/reports/*"
             element={<Reporting />} />
           <Route exact path="/analysis/*"
             element={<Analysis />} />
