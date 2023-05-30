@@ -88,8 +88,10 @@ def write_report_sales(request):
             token = request.META.get("decoded_token")
             lis = controllers.get_list_search(token)
             #lis = controllers.get_list()
-            excludedColumns = ["Manufacturer Code", "Prep Instructions Vendor State","Replenishment Category","ISBN-13", "Prep Instructions Required","Product Group","Release Date","Replenishment Category"
-                                "UPC", ]
+            #excludedColumns = ["Manufacturer Code", "Prep Instructions Vendor State","Replenishment Category","ISBN-13", "Prep Instructions Required","Product Group","Release Date","Replenishment Category"
+            #                    "UPC", ]
+            excludedColumns = request.GET.getlist("exclude[]")
+            print(excludedColumns)
             return downloadCSV(lis,excludedColumns)
     except Exception as err:
         print(err)

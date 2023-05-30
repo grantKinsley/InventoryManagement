@@ -10,6 +10,7 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { NavLink } from "react-router-dom"
+import qs from "qs";
 
 const baseURL = "http://localhost:8000/amz_items/";
 
@@ -24,7 +25,13 @@ const ReportingNavbar = () => {
         responseType: "blob",
         headers: {
           Bearer: accessToken,
-        }
+        },
+        params:{
+          // exclude: ["Manufacturer Code", "Prep Instructions Vendor State","Replenishment Category","ISBN-13", "Prep Instructions Required",
+          //           "Product Group","Release Date","Replenishment Category","UPC"],
+          // exclude: "Manufacturer Code",
+          // exclude: "Prep Instructions Vendor State",
+        },
       })
       .then((res) => {
         fileDownload(res.data, "fileName.CSV");
