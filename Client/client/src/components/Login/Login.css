@@ -1,10 +1,11 @@
 .login-wrapper {
     background-color: white;
     margin: auto;
-    padding: 0px 25px 25px 25px;
+    padding: 0px 50px 30px 50px;
     width: 200px;
     border: solid #383636;
     border-radius: 15px;
+    justify-content: center;
 }
 
 .full-page-container {
@@ -12,16 +13,21 @@
     margin:-25px;
     height: 100vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
+}
+
+form {
+    display: inline-block;
+    text-align: center;
+}
+
+label {
+    text-align: left;
 }
 
 .login-title {
     text-align:center;
-}
-
-button {
-    margin-top: 25px;
 }
 
 .invalidText {

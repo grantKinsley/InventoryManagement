@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../context-Api/AuthProvider";
 import axios from "axios";
+import Button from "@mui/material/Button";
 import "./Login.css";
 
 // Test Login:
@@ -84,10 +85,11 @@ const Login = () => {
           </label>
           <div className="invalidText">{errMsg}</div>
           <div>
-            <button type="submit">Submit</button>
+            <Button type="submit" variant="contained"
+             style={{ width: "100%", marginTop: "40px" }}>Submit</Button>
           </div>
+          <Button onClick={() => navigate("/register")}>Register</Button>
         </form>
-        <button onClick={() => navigate("/register")}>Register here</button>
       </div>
       <div className="footer" style={{ height: 100 }}></div>
     </div>

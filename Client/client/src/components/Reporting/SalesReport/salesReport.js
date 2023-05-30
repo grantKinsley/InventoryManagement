@@ -43,12 +43,12 @@ const SalesReport = () => {
 
     // Temporary
     const data = {
-        labels: ["05/15/23", "05/16/23", "05/17/23", "05/18/23", "05/19/23"],
-        values: [0, 5, 2, 3, 5],
+        labels: ["05/14/23", "05/15/23", "05/16/23", "05/17/23", "05/18/23", "05/19/23", "05/20/23"],
+        values: [53, 27, 44, 34, 60, 55, 22],
         datasets: [
             {
-                label: 'Test',
-                data: [0, 5, 2, 3, 5],
+                label: 'Qty Sold',
+                data: [53, 27, 44, 34, 60, 55, 22],
                 fill: false,
                 borderColor: 'rgb(255, 99, 132)',
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
@@ -95,7 +95,7 @@ const SalesReport = () => {
 				labels: data.labels,
 				datasets: [
 					{
-						label: "test",
+						label: "Qty Sold",
 						data: data.values,
 						fill: false,
 					}
@@ -138,19 +138,19 @@ const SalesReport = () => {
                 <div className="summary-container">
                     <div className="summary-box">
                         <span className="summary-title"> Amazon Revenue </span>
-                        <span className="value"> $100,000.00 </span>
+                        <span className="value"> $24,362.41 </span>
                     </div>
                     <div className="summary-box">
                         <span className="summary-title"> Sold to Amazon </span>
-                        <span className="value"> $80,000.00 </span>
+                        <span className="value"> $15,242.00 </span>
                     </div>
                     <div className="summary-box">
                         <span className="summary-title"> Customer Returns </span>
-                        <span className="value"> 231 </span>
+                        <span className="value"> 12 </span>
                     </div>
                 </div>
                 <div className="graph-container">
-				    <canvas id="chart" width="200" height="200"></canvas>
+				    <canvas id="chart" width="800" height="200"></canvas>
                 </div>
             </div>
         </div>
