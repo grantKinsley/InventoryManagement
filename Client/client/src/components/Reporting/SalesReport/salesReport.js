@@ -27,13 +27,31 @@ const baseURL = "http://localhost:8000/amz_items/";
 const SalesReport = () => {
     const [showReport, setShowReport] = useState(false)
     const [loading, setLoading] = useState(false);
-    const [timeframe, setTimeframe] = useState(0);
-    const [date, setDate] = useState(new Date());
+    const [timeframe, setTimeframe] = useState(1);
+    // const [date, setDate] = useState(new Date());
+    const [end, setEnd] = useState(new Date());
+    const [start, setStart] = useState(new Date());
+
+    // data we are tracking
+    const [timestamps, setTimestamps] = useState([])
+    const [unitsSold, setUnitsSold] = useState([])
 
     useEffect(() => {
-		if (showReport) {
-			renderChart();
-		}
+        // on every load, set start to align with end
+        const new_start = new Date(end);
+        if (timeframe == 1) {    // daily
+            new_start.setDate(new_start.getDate()-1);
+        }
+        else if (timeframe == 2) {   // weekly
+            new_start.setDate(new_start.getDate()-7);
+        }
+        else if (timeframe == 3) {   // monthly
+            new_start.setMonth(new_start.getMonth()-1);
+        }
+        else if (timeframe == 4) {   // yearly
+            new_start.setFullYear(new_start.getFullYear()-1);
+        }
+        setStart(new_start);
 	})
 
     const accessToken = sessionStorage.getItem("serverToken");
@@ -56,14 +74,41 @@ const SalesReport = () => {
         ]
     };
 
+    const parseResult = (res) => {
+        var timeToUnits = {};
+
+        for (var item in res) {
+            const date_key = res[item]['timestamp']['$date'].substring(0,10)
+            const units_val = res[item]['Shipped Units']
+            if (!isNaN(units_val)) { 
+                if (date_key in timeToUnits) {
+                    timeToUnits[date_key] += units_val;
+                }
+                else {
+                    timeToUnits[date_key] = units_val;
+                }
+            }
+            
+        }
+        const keys = [];
+        const vals = []
+        for (let key in timeToUnits) {
+            keys.push(key);
+            vals.push(timeToUnits[key])
+            console.log(key + ' ' + timeToUnits[key]);
+        }
+        renderChart(keys, vals)
+    }
+
 
     const generateReport = async (e) => {
         e.preventDefault();
         try {
             setLoading(true);
-            const response = await axios.get(baseURL + "hist", { headers: { "Content-Type": "application/json", Bearer: accessToken }, });
+            const response = await axios.get(baseURL + "hist", { headers: { "Content-Type": "application/json", Bearer: accessToken, Start: start.toJSON(), End: end.toJSON() } });
             const result = JSON.parse(response?.data);
             console.log(result);
+            parseResult(result)
             setShowReport(true)
         } catch (err) {
             if (!err?.response) {
@@ -75,10 +120,11 @@ const SalesReport = () => {
     };
 
     const handleChange = (event) => {
-        setTimeframe(event.target.value);
+        const timeframe = event.target.value;
+        setTimeframe(timeframe);
     };
 
-    function renderChart() {
+    function renderChart(labels, values) {
 		const chart = document.getElementById("chart");
 
 		let chartExists = Chart.getChart("chart");
@@ -92,11 +138,11 @@ const SalesReport = () => {
 				aspectRatio: 1,
 			},
 			data: {
-				labels: data.labels,
+				labels: labels,
 				datasets: [
 					{
 						label: "Qty Sold",
-						data: data.values,
+						data: values,
 						fill: false,
 					}
 
@@ -125,8 +171,9 @@ const SalesReport = () => {
                     </Select>
                 </FormControl>
                 <DatePicker
-                    selected={date}
-                    onChange={(date) => setDate(date)}
+                    selected={end}
+                    onChange={(end) => setEnd(end)}
+                    label="End Date"
                 />
                 <Button variant="contained" onClick={generateReport} disabled={loading} 
                 style={{ minWidth: '100px' }}> 

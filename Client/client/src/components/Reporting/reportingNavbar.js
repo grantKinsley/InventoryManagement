@@ -53,7 +53,7 @@ const ReportingNavbar = () => {
           <span className={styles.linkText}>{item.text}</span>
         </NavLink>
       })}
-      <button onClick={downloadCSV}>Download CSV</button>;
+      <button onClick={downloadCSV}>Download CSV</button>
     </div>
   );
 };

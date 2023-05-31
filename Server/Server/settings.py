@@ -109,7 +109,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_HEADERS = ('content-disposition', 'accept-encoding',
-                      'content-type', 'accept', 'origin', 'authorization', 'bearer')
+                      'content-type', 'accept', 'origin', 'authorization', 'bearer', 'start', 'end')
 
 ROOT_URLCONF = "Server.urls"
 
