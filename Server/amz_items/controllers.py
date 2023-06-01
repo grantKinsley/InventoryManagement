@@ -144,7 +144,7 @@ def get_asins(token):
 def get_general_history(start,end,token):
     # Parser should be able to parse any sort of datetime format you throw at it. 
     # In frontend, use javascript Date toJson method before sending to backend (not confirmed that it works yet)
-    # Checked that date works when format is "Y-M-D H:M:S.TimezoneCode" eg 2023-05-22 13:55:31.406482
+    # Checked that date works when format is "Y-M-D H:M:S.SOMETHING" eg 2023-05-22 13:55:31.406482
     start = parser.parse(start)
     end = parser.parse(end)
     items = list(priceTimeSeries.find(

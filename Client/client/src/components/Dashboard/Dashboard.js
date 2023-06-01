@@ -9,18 +9,62 @@ const Dashboard = () => {
 	const [ordered, setOrdered] = useState(0);
 	const [returned, setReturned] = useState(0);
 	const [views, setViews] = useState(0);
+	const [fetched, setFetched] = useState(false);
+	const [records, setRecords] = useState([]);
+	const baseURL = "http://localhost:8000/amz_items/hist";
 
+	useEffect(() => {
+		const getRecords = async () => {
+			// console.log(auth.token);
+			var currentTime = new Date();
+			var lastWeekTime = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate() - 7);
+			//   console.log(currentTime.toJSON())
+			//   console.log(lastWeekTime.toJSON())
+			const accessToken = sessionStorage.getItem("serverToken");
+			const response = await axios.get(baseURL, {
+				headers: { "Content-Type": "application/json", Bearer: accessToken, Start: lastWeekTime.toJSON(), End: currentTime.toJSON() },
+			});
+			setFetched(true);
+			const result = JSON.parse(response.data);
+			console.log(result);
+			setRecords(result);
+			updateDashboard();
+		};
+		const updateDashboard = () => {
+			const currencyFormatter = new Intl.NumberFormat('en-US', {
+				style: 'currency',
+				currency: 'USD',
+			});
+			const defaultFormatter = new Intl.NumberFormat();
+			let [saleSum, orderedSum, returnedSum] = [0,0,0];
+			const parseAsNumber = (input) => Number(String(input).replace(/[^0-9.-]+/g,""));
+			for (let item of records) {
+				let sale = item?.["Ordered Revenue"] ? parseAsNumber(item["Ordered Revenue"]) : 0;
+				let order = item?.["Ordered Units"] ? parseAsNumber(item["Ordered Units"]) : 0;
+				let ret = item?.["Customer Returns"] ? parseAsNumber(item["Customer Returns"]) : 0;
+				saleSum += sale;
+				orderedSum += order;
+				returnedSum += ret;
+			}
+			setSales(currencyFormatter.format(saleSum));
+			setOrdered(defaultFormatter.format(orderedSum));
+			setReturned(defaultFormatter.format(returnedSum));
+		}
+		getRecords().catch(console.error);
+		return;
+	  }, [records.length]);
+	
+	
 	if (sessionStorage.getItem("serverToken") === null) {
 		return <Navigate to="/login" />;
 	}
-
 	return (
 		<div className="container">
 			<div className="card-container">
 				<div className="card">
 					<h2>Weekly Glance</h2>
 					<h4>Sales</h4>
-					<div className="green">$ {sales}</div>
+					<div className="green">{sales}</div>
 
 					<h4>Products Ordered</h4>
 					<div className="green">{ordered}</div>
