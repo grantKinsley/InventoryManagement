@@ -10,6 +10,7 @@ const Dashboard = () => {
 	const [returned, setReturned] = useState(0);
 	const [views, setViews] = useState(0);
 	const [fetched, setFetched] = useState(false);
+	const [hottestItems, setHottestItems] = useState([]);
 	const [records, setRecords] = useState([]);
 	const baseURL = "http://localhost:8000/amz_items/hist";
 
@@ -28,6 +29,7 @@ const Dashboard = () => {
 			const result = JSON.parse(response.data);
 			console.log(result);
 			setRecords(result);
+			// Update dashboard based on queried results
 			updateDashboard();
 		};
 		const updateDashboard = () => {
@@ -37,11 +39,18 @@ const Dashboard = () => {
 			});
 			const defaultFormatter = new Intl.NumberFormat();
 			let [saleSum, orderedSum, returnedSum] = [0,0,0];
+			// Arrow function that reads input and converts to number (ie $1,000 -> 1000)
 			const parseAsNumber = (input) => Number(String(input).replace(/[^0-9.-]+/g,""));
 			for (let item of records) {
 				let sale = item?.["Ordered Revenue"] ? parseAsNumber(item["Ordered Revenue"]) : 0;
 				let order = item?.["Ordered Units"] ? parseAsNumber(item["Ordered Units"]) : 0;
 				let ret = item?.["Customer Returns"] ? parseAsNumber(item["Customer Returns"]) : 0;
+
+				// Correct item entries to have the correct type and format
+				item["Ordered Revenue"] = sale;
+				item["Ordered Units"] = order;
+				item["Customer Returns"] = ret;
+
 				saleSum += sale;
 				orderedSum += order;
 				returnedSum += ret;
@@ -49,6 +58,9 @@ const Dashboard = () => {
 			setSales(currencyFormatter.format(saleSum));
 			setOrdered(defaultFormatter.format(orderedSum));
 			setReturned(defaultFormatter.format(returnedSum));
+			records.sort((a,b) => b["Ordered Revenue"]-a["Ordered Revenue"])
+			setHottestItems(records.slice(0,3))
+			console.log(records);
 		}
 		getRecords().catch(console.error);
 		return;
@@ -78,6 +90,7 @@ const Dashboard = () => {
 
 				<div className="card">
 					<h2>Hottest Items</h2>
+					{hottestItems.map(a => (<div>{a?.["ASIN"]}</div>))}
 				</div>
 			</div>
 
