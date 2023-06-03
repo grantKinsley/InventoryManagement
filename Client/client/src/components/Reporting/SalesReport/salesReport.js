@@ -41,22 +41,27 @@ const SalesReport = () => {
         // on every load, set start to align with end
         const new_start = new Date(end);
         if (timeframe == 1) {    // daily
-            new_start.setDate(new_start.getDate()-1);
+            const endOfDay = new Date(end);
+            endOfDay.setHours(23,59,59);
+            setEnd(endOfDay);
+            new_start.setHours(0,0,0);
             setDateFormat("MM/dd/yyy")
         }
         else if (timeframe == 2) {   // weekly
-            new_start.setDate(new_start.getDate()-7);
+            const endOfDay = new Date(end);
+            endOfDay.setHours(23,59,59);
+            setEnd(endOfDay);
+            new_start.setDate(new_start.getDate()-6);
+            new_start.setHours(0,0,0)
             setDateFormat("MM/dd/yyy")
         }
         else if (timeframe == 3) {   // monthly
-            // new_start.setMonth(new_start.getMonth()-1);
             const endOfMonth = new Date(new_start.getFullYear(), new_start.getMonth() + 1, 0)
             setEnd(endOfMonth)
             new_start.setDate(1);
             setDateFormat("MM/yyyy")
         }
         else if (timeframe == 4) {   // yearly
-            // new_start.setFullYear(new_start.getFullYear()-1);
             const endOfYear = new Date(new_start.getFullYear(), 11, 31)
             setEnd(endOfYear)
             new_start.setMonth(0)
