@@ -31,6 +31,7 @@ const SalesReport = () => {
     // const [date, setDate] = useState(new Date());
     const [end, setEnd] = useState(new Date());
     const [start, setStart] = useState(new Date());
+    const [dateFormat, setDateFormat] = useState("MM/dd/yyy")
 
     // data we are tracking
     const [timestamps, setTimestamps] = useState([])
@@ -41,15 +42,26 @@ const SalesReport = () => {
         const new_start = new Date(end);
         if (timeframe == 1) {    // daily
             new_start.setDate(new_start.getDate()-1);
+            setDateFormat("MM/dd/yyy")
         }
         else if (timeframe == 2) {   // weekly
             new_start.setDate(new_start.getDate()-7);
+            setDateFormat("MM/dd/yyy")
         }
         else if (timeframe == 3) {   // monthly
-            new_start.setMonth(new_start.getMonth()-1);
+            // new_start.setMonth(new_start.getMonth()-1);
+            const endOfMonth = new Date(new_start.getFullYear(), new_start.getMonth() + 1, 0)
+            setEnd(endOfMonth)
+            new_start.setDate(1);
+            setDateFormat("MM/yyyy")
         }
         else if (timeframe == 4) {   // yearly
-            new_start.setFullYear(new_start.getFullYear()-1);
+            // new_start.setFullYear(new_start.getFullYear()-1);
+            const endOfYear = new Date(new_start.getFullYear(), 11, 31)
+            setEnd(endOfYear)
+            new_start.setMonth(0)
+            new_start.setDate(1)
+            setDateFormat("yyyy")
         }
         setStart(new_start);
 	})
@@ -102,6 +114,8 @@ const SalesReport = () => {
 
 
     const generateReport = async (e) => {
+        console.log(start)
+        console.log(end)
         e.preventDefault();
         try {
             setLoading(true);
@@ -122,6 +136,8 @@ const SalesReport = () => {
     const handleChange = (event) => {
         const timeframe = event.target.value;
         setTimeframe(timeframe);
+        const resetEnd = new Date();
+        setEnd(resetEnd)
     };
 
     function renderChart(labels, values) {
@@ -173,7 +189,11 @@ const SalesReport = () => {
                 <DatePicker
                     selected={end}
                     onChange={(end) => setEnd(end)}
-                    label="End Date"
+                    startDate={start}
+                    endDate={end}
+                    showMonthYearPicker={(timeframe == 3)}
+                    showYearPicker={(timeframe == 4)}
+                    dateFormat={dateFormat}
                 />
                 <Button variant="contained" onClick={generateReport} disabled={loading} 
                 style={{ minWidth: '100px' }}> 
