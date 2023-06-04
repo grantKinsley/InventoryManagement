@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, useContext } from "react";
 import {Spinner} from 'react-bootstrap';
 import axios from "axios";
+import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
@@ -56,7 +57,7 @@ const Register = () => {
     <div className="full-page-container">
       <div className="header" style={{ height: 100 }}></div>
       <div className="login-wrapper">
-        <h1>Register</h1>
+        <h1 className="login-title">Register</h1>
         <form onSubmit={handleSubmit}>
           <label>
             <p>Email</p>
@@ -78,10 +79,12 @@ const Register = () => {
             />
           </label> */}
           <div>
-            <button type="submit" disabled={loading}>{loading ? "LOADING" : "Submit"}</button>
+            <Button type="submit" variant="contained"
+            disabled={loading}
+            style={{ width: "100%", marginTop: "40px" }}>{loading ? "LOADING" : "Submit"}</Button>
           </div>
+          <Button onClick={() => navigate("/login")}>Login here</Button>
         </form>
-        <button onClick={() => navigate("/login")}>Login here</button>
       </div>
       <div className="footer" style={{ height: 100 }}></div>
     </div>

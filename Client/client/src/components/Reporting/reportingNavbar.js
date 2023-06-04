@@ -9,6 +9,7 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import Button from "@mui/material/Button";
 import { NavLink } from "react-router-dom"
 import qs from "qs";
 
@@ -77,8 +78,8 @@ const ReportingNavbar = () => {
           <span className={styles.linkText}>{item.text}</span>
         </NavLink>
       })}
-      <button onClick={downloadCSV}>Download CSV</button>
-      <button onClick={downloadTemplate}>Download Template</button>
+      <Button variant="contained" onClick={downloadCSV}>Download CSV</Button>
+      <Button variant="contained" onClick={downloadTemplate}>Download Template</Button>
     </div>
   );
 };
