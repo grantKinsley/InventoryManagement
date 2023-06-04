@@ -8,6 +8,7 @@ urlpatterns = [
     path('asins', views.get_all_asins, name='get_asins'),
     path('report', views.write_report, name='write_report'),
     path('reportSales', views.write_report_sales, name='write_report_sales'),
+    path('template', views.write_template, name='write_template'),
     path('hist', views.general_history, name='general_history'),
     path('hist/<str:asin>', views.price_history, name='history'),
     path('delete', views.delete_one, name='delete'),
