@@ -66,7 +66,19 @@ def amz_item(request, asin):
         print(err)
         return JsonResponse({"Error 404": f"{err}"}, status=404)
 
-
+@csrf_exempt
+@middleware.authentication_required
+def write_template(request):
+    try:
+        if request.method == 'GET':
+            token = request.META.get("decoded_token")
+            lis = controllers.get_list_search(token)
+            #lis = controllers.get_list()
+            excludedColumns = request.GET.getlist("exclude[]")
+            return downloadCSV(lis,excludedColumns,True)
+    except Exception as err:
+        print(err)
+        return JsonResponse({"Error 404": f"{err}"})
 @csrf_exempt
 @middleware.authentication_required
 def write_report(request):
@@ -75,7 +87,8 @@ def write_report(request):
             token = request.META.get("decoded_token")
             lis = controllers.get_list_search(token)
             #lis = controllers.get_list()
-            return downloadCSV(lis,[])
+            excludedColumns = request.GET.getlist("exclude[]")
+            return downloadCSV(lis,excludedColumns,False)
     except Exception as err:
         print(err)
         return JsonResponse({"Error 404": f"{err}"})
@@ -92,14 +105,13 @@ def write_report_sales(request):
             #                    "UPC", ]
             excludedColumns = request.GET.getlist("exclude[]")
             print(excludedColumns)
-            return downloadCSV(lis,excludedColumns)
+            return downloadCSV(lis,excludedColumns,False)
     except Exception as err:
         print(err)
         return JsonResponse({"Error 404": f"{err}"})
 
 
-def downloadCSV(lis,excludedColumns):
-    
+def downloadCSV(lis,excludedColumns,template):
     try:
         response = HttpResponse(
             content_type='text/csv',
@@ -123,7 +135,6 @@ def downloadCSV(lis,excludedColumns):
         writer.writerow(columnNames)
 
         #change template to true if you do not want the data
-        template = False
         if(template):
             return response
 

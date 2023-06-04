@@ -30,8 +30,32 @@ const ReportingNavbar = () => {
         params:{
           // exclude: ["Manufacturer Code", "Prep Instructions Vendor State","Replenishment Category","ISBN-13", "Prep Instructions Required",
           //           "Product Group","Release Date","Replenishment Category","UPC"],
-          // exclude: "Manufacturer Code",
-          // exclude: "Prep Instructions Vendor State",
+        },
+      })
+      .then((res) => {
+        fileDownload(res.data, "fileName.CSV");
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const downloadTemplate = async (e) => {
+    const accessToken = sessionStorage.getItem("serverToken");
+    const reportURL = baseURL + "template";
+    const response = await axios
+      .get(reportURL, {
+        responseType: "blob",
+        headers: {
+          Bearer: accessToken,
+        },
+        params:{
+          exclude: ["_id", "companyId", "Brand", "Brand Code", "EAN", "ISBN-13", "Manufacturer Code", "Model Number", "Parent ASIN", "Prep Instructions Required",
+                    "Prep Instructions Vendor State","Product Group", "Product Title", "Release Date", "Replenishment Category", "UPC", "metadata", "price",
+                    "timestamp", "Amazon Cost", "Internal Cost", "sellingPrice", "Customer Returns","Ordered Revenue","Ordered Units","Shipped COGS",
+                    "Shipped Revenue","Shipped Units","_1","Aged 90+ Days Sellable Inventory","Aged 90+ Days Sellable Units","Open Purchase Order Quantity",
+                    "Overall Vendor Lead Time (days)","Receive Fill Rate %","Sellable On Hand Inventory","Sellable On Hand Units","Unfilled Customer Ordered Units",
+                    "Unsellable On Hand Inventory","Unsellable On Hand Units","Vendor Confirmation Rate"],
         },
       })
       .then((res) => {
@@ -55,6 +79,7 @@ const ReportingNavbar = () => {
         </NavLink>
       })}
       <Button variant="contained" onClick={downloadCSV}>Download CSV</Button>
+      <Button variant="contained" onClick={downloadTemplate}>Download Template</Button>
     </div>
   );
 };
