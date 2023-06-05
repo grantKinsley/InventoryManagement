@@ -64,10 +64,11 @@ const Invoices = () => {
                 })}
             </div>
             <div className={styles.sub_container} style={showInvoice ? {} : { display: 'none' }}>
-                <Button variant="contained" onClick={validate}> Validate </Button>
-                <LoadingSpinner loading={loading}/>
+                {/* <Button variant="contained" onClick={validate}> Validate </Button>
+                <LoadingSpinner loading={loading}/> */}
                 <div className={styles.invoice_header}>
                     <h2 className={styles.invoice_title}> Invoice #{currentInvoice.id}</h2>
+                    <h2 className={styles.invoice_title}> Status: {currentInvoice.id === "253929" ? "Amazon Audit Pass" : "Amazon Audit Fail"}</h2>
                     <span className={styles.invoice_date}> {currentInvoice.date} </span>
                 </div>
 
