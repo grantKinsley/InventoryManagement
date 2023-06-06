@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import AuthContext from "../../context-Api/AuthProvider";
 import { BrowserRouter, Routes, Route, Navigate, NavLink } from "react-router-dom";
-import { Button, Typography, Input } from '@mui/material';
+import { Button, Typography, Input, Paper, Divider } from '@mui/material';
 import SearchIcon from "@mui/icons-material/Search";
 
 import styles from "./invoices.module.css";
@@ -68,23 +68,31 @@ const Invoices = () => {
                     </Button>
                 })}
             </div>
+            
             <div className={styles.sub_container} style={showInvoice ? {} : { display: 'none' }}>
-                <Button variant="contained" onClick={validate}> Validate </Button>
+            <Paper className={styles.invoice_paper}
+                elevation={3}>
+                
                 <LoadingSpinner loading={loading} />
+                <Typography className={styles.invoice_title} variant="h2">Invoice</Typography>
                 <div className={styles.invoice_header}>
-                    <h2 className={styles.invoice_title}> Invoice #{currentInvoice.id}</h2>
-                    <span className={styles.invoice_date}> {currentInvoice.date} </span>
+                    <Typography className={styles.invoice_number} variant="h6"> No.{currentInvoice.id}</Typography>
+                    <Typography className={styles.invoice_date}> Date: {currentInvoice.date} </Typography>
                 </div>
-
-                <p className={styles.invoice_details}> Total Payable Amount | ${currentInvoice.invoiceTotal?.amount} </p>
-
+                <hr className={styles.hr}/>
+                <Typography variant="h6">Product Breakdown</Typography>
                 <div className={styles.invoice_items}>
                     {currentInvoice.items?.map(item => {
-                        return <span> {item.itemSequenceNumber}: Product: {item.amazonProductIdentifier} / Qty: {item.invoicedQuantity?.amount} / Net Cost: ${item.netCost?.amount} / Total: ${item.invoicedQuantity?.amount * item.netCost?.amount}</span>
+                        return <Typography> {item.itemSequenceNumber}: Product: {item.amazonProductIdentifier} / Qty: {item.invoicedQuantity?.amount} / Net Cost: ${item.netCost?.amount} / Total: ${item.invoicedQuantity?.amount * item.netCost?.amount}</Typography>
                     })}
                 </div>
-
+                <hr className={styles.hr}/>
+                <Typography className={styles.invoice_details} variant="h6"> Total Payable Amount: ${currentInvoice.invoiceTotal?.amount}</Typography>
+                
+                <Button className={styles.validateBtn} variant="contained" onClick={validate}> Validate </Button>
+                </Paper>
             </div>
+            
         </div>
     )
 }
