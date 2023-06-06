@@ -225,6 +225,7 @@ const History = () => {
 					setASIN(newValue)
 				}}
 				options={allAsins}
+				className="autocomplete"
 				renderInput={(params) => <TextField {...params} label="ASIN"/>}
 			/>
 			<button onClick={getTimeSeries}>Show History</button>

@@ -1,7 +1,17 @@
 .catalog-container {
     background-color: white;
+}
+
+.catalog-card-container {
     width: 100%;
-    margin: 20px;
+    height: 90vh;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.catalog-header {
+    display: flex;
+    padding: 20px;
 }
 
 .search-bar {
@@ -26,4 +36,14 @@
     margin-bottom: 10px;
     display: flex;
     flex-direction: row;
+}
+
+.catalog-card {
+    max-width: 250px;
+    max-height: 300px;
+}
+
+.catalog-card-media {
+    height: 150px;
+    padding-top: 2%;
 }

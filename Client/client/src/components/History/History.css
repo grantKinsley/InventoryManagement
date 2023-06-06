@@ -7,3 +7,7 @@
     max-height: 80vh;;
     margin-top: 10px;
 }
+
+.autocomplete {
+    max-width: 100px;
+}

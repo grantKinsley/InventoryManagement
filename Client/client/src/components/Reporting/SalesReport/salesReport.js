@@ -14,6 +14,8 @@ import Button from '@mui/material/Button';
 import DatePicker from "react-datepicker";
 import LoadingSpinner from "../../LoadingSpinner/spinner"
 
+import "react-datepicker/dist/react-datepicker.css"
+
 // Imports for Charts
 import Chart from 'chart.js/auto';
 import { Line } from "react-chartjs-2";

@@ -1,4 +1,29 @@
 .data-container {
-    overflow-y: auto;
-    max-height: 90vh;
+    background-color: white;
+    width: 100%;
+    margin: 0px;
+}
+
+.search-bar {
+    margin: 0px;
+}
+
+.table-container {
+    width: 100%;
+    margin-top: 0px;
+    max-height: 500px;
+}
+
+.card-info-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-self: center;
+    width: 100%;
+}
+
+.top-elements {
+    margin-bottom: 0px;
+    display: flex;
+    flex-direction: row;
 }

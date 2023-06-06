@@ -78,7 +78,7 @@ const TableToolbar = props => {
                 </TitleTypography>
             ) : (
                 <TitleTypography variant="h6" id="tableTitle">
-                    Catalog
+                    
                 </TitleTypography>
             )}
             <Tooltip title="Download CSV">

@@ -2,7 +2,8 @@ import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import AuthContext from "../../context-Api/AuthProvider";
 import { BrowserRouter, Routes, Route, Navigate, NavLink } from "react-router-dom";
-import Button from '@mui/material/Button';
+import { Button, Typography, Input } from '@mui/material';
+import SearchIcon from "@mui/icons-material/Search";
 
 import styles from "./invoices.module.css";
 import { invoiceExample } from "./invoices_ex";
@@ -56,16 +57,20 @@ const Invoices = () => {
     return (
         <div className={styles.invoices_container}>
             <div className={styles.sidenav}>
-                <span className={styles.sidenav_title}> Invoices </span>
+                <Typography variant={"h6"}> Invoices </Typography>
+                <div>
+                    <SearchIcon />
+                    <Input placeholder="Search" />
+                </div>
                 {invoiceList.map(item => {
-                    return <Button key={item.id} currentTarget={item.id} className={styles.sideitem} onClick={() => invoiceOnClick(item)}>
-                        <span className={styles.linkText}>ID# {item.id} --- ${item.invoiceTotal.amount} </span>
+                    return <Button variant="outlined" key={item.id} currentTarget={item.id} className={styles.sideitem} onClick={() => invoiceOnClick(item)}>
+                        <Typography className={styles.linkText}>ID# {item.id} --- ${item.invoiceTotal.amount} </Typography>
                     </Button>
                 })}
             </div>
             <div className={styles.sub_container} style={showInvoice ? {} : { display: 'none' }}>
                 <Button variant="contained" onClick={validate}> Validate </Button>
-                <LoadingSpinner loading={loading}/>
+                <LoadingSpinner loading={loading} />
                 <div className={styles.invoice_header}>
                     <h2 className={styles.invoice_title}> Invoice #{currentInvoice.id}</h2>
                     <span className={styles.invoice_date}> {currentInvoice.date} </span>

@@ -59,7 +59,7 @@ const Dashboard = () => {
 			setOrdered(defaultFormatter.format(orderedSum));
 			setReturned(defaultFormatter.format(returnedSum));
 			records.sort((a,b) => b["Ordered Revenue"]-a["Ordered Revenue"])
-			setHottestItems(records.slice(0,3))
+			setHottestItems(records.slice(0,5))
 			console.log(records);
 		}
 		getRecords().catch(console.error);

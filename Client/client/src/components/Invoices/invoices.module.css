@@ -2,7 +2,7 @@
     display: flex;
 }
 .sidenav {
-    width: 400px;
+    width: 300px;
     transition: width 0.3s ease-in-out;
     height: 100vh;
     background-color: #F5F5F5;

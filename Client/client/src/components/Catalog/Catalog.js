@@ -16,7 +16,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import EnhancedTable from './EnhancedTable';
+import { Input, Card, CardContent, CardMedia, CardActionArea, Grid, Typography } from '@mui/material';
 
 var fileDownload = require("js-file-download");
 
@@ -65,84 +65,6 @@ const Catalog = () => {
     fetchData().catch(console.error);
   }, []);
 
-  const columns = useMemo(
-    () => [
-      {
-        Header: "ASIN",
-        accessor: "ASIN",
-      },
-      {
-        Header: 'Model',
-        accessor: 'Product Title',
-      },
-      {
-        Header: 'Selling Price',
-        accessor: 'sellingPrice',
-      },
-    ],
-    []
-  )
-
-  const deleteCompanyData = async (e) => {
-    const accessToken = sessionStorage.getItem("serverToken");
-    const response = await axios.delete(baseURL, {
-      headers: { "Content-Type": "application/json", Bearer: accessToken },
-    });
-    console.log(response);
-    setData([]);
-  };
-
-  const handleGetOne = (e) => {
-    const fetchOne = async () => {
-      const url = baseURL + asin;
-      console.log(url);
-      const response = await axios.get(url, {
-        headers: { "Content-Type": "application/json", Bearer: auth.token },
-      });
-      setFetched(true);
-      const result = JSON.parse(response.data);
-      setData(result);
-    };
-    fetchOne().catch(console.error);
-  };
-
-  const handleDeleteClickOpen = () => {
-    setDeleteOpen(true);
-  }
-
-  const handleDeleteClose = () => {
-    setDeleteOpen(false);
-  };
-
-  const handleAddClickOpen = () => {
-    setAddOpen(true);
-  }
-
-  const handleAddClose = () => {
-    setAddOpen(false);
-  };
-
-  // We need to keep the table from resetting the pageIndex when we
-  // Update data. So we can keep track of that flag with a ref.
-
-  // When our cell renderer calls updateMyData, we'll use
-  // the rowIndex, columnId and new value to update the
-  // original data
-  const updateMyData = (rowIndex, columnId, value) => {
-    // We also turn on the flag to not reset the page
-    setSkipPageReset(true)
-    setData(old =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...old[rowIndex],
-            [columnId]: value,
-          }
-        }
-        return row
-      })
-    )
-  }
 
   if (sessionStorage.getItem("serverToken") === null) {
     return <Navigate to="/login" />;
@@ -151,32 +73,30 @@ const Catalog = () => {
   if (fetched) {
     return (
       <div className="catalog-container">
-        {/*
-        <form>
-          <label>
-            Search by Asin:
-            <input
-              type="text"
-              name="asin"
-              onChange={(e) => {
-                setAsin(e.target.value);
-              }}
-            />
-          </label>
-          <button onClick={handleGetOne}>Search</button>
-        </form>
-            */}
-
-        <div className="table-container">
-          <EnhancedTable
-            columns={columns}
-            data={data}
-            setData={setData}
-            updateMyData={updateMyData}
-            skipPageReset={skipPageReset}
-          />
+        <div className="catalog-header">
+          <SearchIcon />
+          <Input placeholder="Search" />
+        </div>
+        <div className="catalog-card-container">
+          <Grid container spacing={4}>
+            {data.map((item) => {
+              return (
+                <Grid item xs>
+                  <Card key={item["ASIN"]} className="catalog-card">
+                    <CardActionArea>
+                      <CardMedia className="catalog-card-media" image='https://cdn-icons-png.flaticon.com/512/3301/3301043.png' />
+                      <CardContent className="catalog-card-content">
+                        <Typography variant={"h6"}> {item["ASIN"]} </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Grid>
+              );
+            })}
+          </Grid>
         </div>
       </div>
+
     );
   }
 };
